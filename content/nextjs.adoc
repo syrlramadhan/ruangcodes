@@ -1,0 +1,21 @@
+= Automasi Kode Review di Framework Spring Boot dengan Checkstyle dan CI/CD
+Syahrul Ramadhan <syahrul@example.com>
+2025-06-23
+:toclevels: 2
+
+== Pendahuluan
+image::spring-checkstyle.png[Arsitektur Spring Boot dengan Checkstyle, width=600]
+
+Dalam mengembangkan aplikasi, pastinya teman-teman ingin tetap menjaga kualitas kode bukan? Ini merupakan salah satu hal penting untuk menjaga konsistensi dalam pembuatan kode...
+
+== Apa itu CheckStyle?
+image::checkstyle-logo.png[Logo Checkstyle, width=200, align=right]
+
+Mungkin teman-teman masih bingung soal apa sih sebenarnya itu CheckStyle? Nah, CheckStyle sendiri merupakan sebuah tools...
+
+== Contoh Output CheckStyle
+image::checkstyle-error.png[Contoh output error Checkstyle, width=800]
+image::checkstyle-success.png[Contoh output sukses Checkstyle, width=800]
+
+=== Deteksi Import Tidak Digunakan
+*CheckStyle Gagal*: Berdasarkan log error yang muncul...

@@ -1,0 +1,116 @@
+= Membangun Arsitektur Microservices dengan Spring Boot
+John Doe <john@example.com>
+2023-10-15
+:toclevels: 2
+:imagesdir: /images
+
+== Pendahuluan
+image::microservices-architecture.png[Diagram Arsitektur Microservices, width=700, align=center]
+
+Dalam era pengembangan aplikasi modern, arsitektur microservices telah menjadi pilihan populer untuk membangun sistem yang scalable dan maintainable. Artikel ini akan membahas implementasi microservices menggunakan Spring Boot, termasuk:
+
+- Konsep dasar microservices
+- Keuntungan dibanding monolith
+- Tools yang diperlukan
+- Implementasi praktis
+
+== Apa itu Microservices?
+
+Microservices adalah pendekatan arsitektur dimana aplikasi dibangun sebagai kumpulan layanan kecil yang:
+
+- Independen dan loosely coupled
+- Dapat di-deploy secara independen
+- Memiliki database sendiri
+- Berkomunikasi melalui API
+
+[source,java]
+----
+// Contoh sederhana service dalam Spring Boot
+@RestController
+public class ProductService {
+    @GetMapping("/products/{id}")
+    public Product getProduct(@PathVariable String id) {
+        // Implementasi
+    }
+}
+----
+
+== Tools yang Dibutuhkan
+
+image::spring-boot-logo.png[Logo Spring Boot, width=150, align=right]
+
+Untuk membangun microservices dengan Spring Boot, kita membutuhkan:
+
+1. *Spring Boot*: Framework utama
+2. *Spring Cloud*: Untuk fitur microservices
+3. *Docker*: Containerization
+4. *Kubernetes*: Orchestration (opsional)
+5. *PostgreSQL/MongoDB*: Database
+
+=== Spring Cloud Components
+- Service Discovery (Eureka)
+- API Gateway (Spring Cloud Gateway)
+- Config Server (Spring Cloud Config)
+- Circuit Breaker (Resilience4j)
+
+== Implementasi Dasar
+
+Berikut langkah-langkah membuat microservices sederhana:
+
+=== 1. Setup Proyek
+Gunakan Spring Initializr (https://start.spring.io/) dengan dependencies:
+- Spring Web
+- Spring Cloud Discovery Client
+- Lombok
+
+=== 2. Konfigurasi Service Discovery
+[source,yml]
+----
+# application.yml
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+----
+
+=== 3. Membuat REST Controller
+[source,java]
+----
+@RestController
+@RequiredArgsConstructor
+public class OrderController {
+    private final OrderService orderService;
+    
+    @GetMapping("/orders/{id}")
+    public Order getOrder(@PathVariable Long id) {
+        return orderService.getOrder(id);
+    }
+}
+----
+
+== Tantangan dan Solusi
+
+image::microservices-challenges.png[Challenge Microservices, width=600, align=center]
+
+Beberapa tantangan dalam microservices:
+
+1. *Distributed Tracing*: Gunakan Sleuth + Zipkin
+2. *Transaction Management*: Pattern Saga
+3. *Service Communication*: REST, gRPC, atau messaging
+4. *Monitoring*: Prometheus + Grafana
+
+== Kesimpulan
+
+Microservices dengan Spring Boot menawarkan:
+
+- Fleksibilitas dalam pengembangan
+- Scalability yang lebih baik
+- Kemampuan untuk menggunakan teknologi berbeda
+- Waktu development yang lebih cepat untuk fitur baru
+
+Namun perlu diingat bahwa microservices juga membawa kompleksitas tambahan. Mulailah dengan sederhana dan scale sesuai kebutuhan.
+
+== Referensi
+1. "Building Microservices" - Sam Newman
+2. Dokumentasi resmi Spring Cloud
+3. https://microservices.io/

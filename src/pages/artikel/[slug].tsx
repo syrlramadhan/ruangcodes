@@ -1,0 +1,258 @@
+import fs from 'fs';
+import path from 'path';
+import Asciidoctor from 'asciidoctor';
+import Head from 'next/head';
+import Header from '@/components/Header';
+import Sidebar from '@/components/Sidebar';
+import Footer from '@/components/Footer';
+import Link from 'next/link';
+import 'highlight.js/styles/atom-one-dark.css';
+import hljs from 'highlight.js';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+
+const asciidoctor = Asciidoctor();
+
+export async function getStaticPaths() {
+  const dirPath = path.join(process.cwd(), 'content');
+  const files = fs.readdirSync(dirPath);
+
+  const paths = files
+    .filter((file) => file.endsWith('.adoc'))
+    .map((file) => ({
+      params: { slug: file.replace('.adoc', '') }
+    }));
+
+  return {
+    paths,
+    fallback: false,
+  };
+}
+
+export async function getStaticProps({ params }: { params: { slug: string } }) {
+  const filePath = path.join(process.cwd(), 'content', `${params.slug}.adoc`);
+  const adocContent = fs.readFileSync(filePath, 'utf-8');
+
+  // Load all articles to get related articles
+  const allFiles = fs.readdirSync(path.join(process.cwd(), 'content'));
+  const allArticles = allFiles
+    .filter(file => file.endsWith('.adoc') && file !== `${params.slug}.adoc`)
+    .map(file => ({
+      slug: file.replace('.adoc', ''),
+      title: file.replace('.adoc', '').replace(/-/g, ' ')
+    }))
+    .slice(0, 3); // Get first 3 as related articles
+
+  // Load document without including TOC in main content
+  const document = asciidoctor.load(adocContent, {
+    attributes: {
+      'toc': '',
+      'noheader': '',
+      'imagesdir': '/images'
+    },
+    safe: 'unsafe'
+  });
+
+  // Get title from AsciiDoc document
+  const title = document.getTitle() || params.slug.replace(/-/g, ' ');
+
+  // Extract all sections to manually create TOC
+  const sections = document.getSections().map(section => ({
+    id: section.getId(),
+    title: section.getTitle(),
+    level: section.getLevel(),
+    subSections: section.getSections().map(sub => ({
+      id: sub.getId(),
+      title: sub.getTitle(),
+      level: sub.getLevel(),
+    })),
+  }));
+
+  // Create manual TOC in HTML format
+  let toc = '<ul class="sectlevel1">';
+  sections.forEach(section => {
+    toc += `<li><a href="#${section.id}">${section.title}</a>`;
+    if (section.subSections.length > 0) {
+      toc += '<ul class="sectlevel2">';
+      section.subSections.forEach(sub => {
+        toc += `<li><a href="#${sub.id}">${sub.title}</a></li>`;
+      });
+      toc += '</ul>';
+    }
+    toc += '</li>';
+  });
+  toc += '</ul>';
+
+  // Extract only main content
+  let contentHtml = '';
+  const blocks = document.getBlocks();
+  for (const block of blocks) {
+    if (block.getContext() !== 'toc' && block.getContext() !== 'preamble') {
+      contentHtml += block.convert();
+    }
+  }
+
+  return {
+    props: {
+      html: contentHtml || '<p>Content not available</p>',
+      toc: toc || '<p>TOC not available</p>',
+      title,
+      relatedArticles: allArticles
+    },
+  };
+}
+
+export default function ArtikelPage({ html, toc, title, relatedArticles }: {
+  html: string;
+  toc: string;
+  title: string;
+  relatedArticles: { slug: string; title: string }[];
+}) {
+  const router = useRouter();
+
+  useEffect(() => {
+    hljs.highlightAll();
+
+    // Add custom styling for images
+    const style = document.createElement('style');
+    style.textContent = `
+      .imageblock {
+        margin: 2rem 0;
+      }
+      .imageblock .content {
+        display: flex;
+        justify-content: center;
+      }
+      .imageblock img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+      .imageblock img:hover {
+        transform: scale(1.02);
+      }
+      .imageblock.right {
+        float: right;
+        margin: 0 0 1rem 1.5rem;
+        max-width: 50%;
+      }
+      .imageblock.left {
+        float: left;
+        margin: 0 1.5rem 1rem 0;
+        max-width: 50%;
+      }
+      .imageblock.center {
+        margin: 2rem auto;
+        display: block;
+        text-align: center;
+      }
+      .imageblock .title {
+        font-size: 0.9rem;
+        text-align: center;
+        color: #9ca3af;
+        margin-top: 0.5rem;
+      }
+      .related-articles {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid #374151;
+      }
+      .related-articles h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: #f3f4f6;
+      }
+      .related-articles-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+      .related-article-card {
+        background: #1f2937;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .related-article-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+      .related-article-card h3 {
+        font-size: 1.125rem;
+        margin-bottom: 0.5rem;
+        color: #e5e7eb;
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
+  const handleGoBack = () => {
+    router.back();
+  };
+
+  return (
+    <>
+      <Head>
+        <title>{title} | IT Learning Hub</title>
+        <meta name="description" content={`Article about ${title}`} />
+      </Head>
+      <Header />
+      <div className="flex bg-gray-900 min-h-screen pt-16">
+        <Sidebar />
+        <main className="flex-1 p-8 font-mono text-gray-100 ml-64 mr-64">
+          <header className="mb-8">
+            <div className="flex flex-col space-y-4">
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={handleGoBack}
+                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors duration-200 text-sm font-semibold"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                  </svg>
+                  Back
+                </button>
+              </div>
+              <h1 className="text-3xl font-bold text-gray-100">{title}</h1>
+            </div>
+          </header>
+          <article
+            className="prose prose-invert max-w-5xl mx-auto bg-gray-800 p-8 rounded-lg border border-gray-700"
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
+
+          {/* Related Articles Section */}
+          {relatedArticles.length > 0 && (
+            <div className="related-articles max-w-5xl mx-auto">
+              <h2 className="text-2xl font-semibold mb-6">Related Articles</h2>
+              <div className="related-articles-list">
+                {relatedArticles.map((article) => (
+                  <Link key={article.slug} href={`/artikel/${article.slug}`} passHref>
+                    <div className="p-6 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-all duration-200 cursor-pointer">
+                      <h2 className="text-xl font-semibold mb-2">{article.title}</h2>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <Footer />
+        </main>
+        <aside className="w-64 bg-gray-800 p-4 border-l border-gray-700 fixed right-0 top-16 h-[calc(100vh-64px)] overflow-y-auto">
+          <h2 className="text-lg font-semibold text-gray-100 mb-4">Table of Contents</h2>
+          <div
+            className="text-gray-300 text-sm"
+            dangerouslySetInnerHTML={{ __html: toc }}
+          />
+        </aside>
+      </div>
+    </>
+  );
+}
