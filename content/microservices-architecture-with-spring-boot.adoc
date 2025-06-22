@@ -3,6 +3,7 @@ John Doe <john@example.com>
 2023-10-15
 :toclevels: 2
 :imagesdir: /images
+:category: Spring Boot
 
 == Pendahuluan
 image::microservices-architecture.png[Diagram Arsitektur Microservices, width=700, align=center]

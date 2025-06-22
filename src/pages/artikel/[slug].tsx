@@ -20,7 +20,7 @@ export async function getStaticPaths() {
   const paths = files
     .filter((file) => file.endsWith('.adoc'))
     .map((file) => ({
-      params: { slug: file.replace('.adoc', '') }
+      params: { slug: file.replace('.adoc', '') },
     }));
 
   return {
@@ -33,35 +33,62 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
   const filePath = path.join(process.cwd(), 'content', `${params.slug}.adoc`);
   const adocContent = fs.readFileSync(filePath, 'utf-8');
 
-  // Load all articles to get related articles
+  // Load all articles with their categories
   const allFiles = fs.readdirSync(path.join(process.cwd(), 'content'));
-  const allArticles = allFiles
-    .filter(file => file.endsWith('.adoc') && file !== `${params.slug}.adoc`)
-    .map(file => ({
-      slug: file.replace('.adoc', ''),
-      title: file.replace('.adoc', '').replace(/-/g, ' ')
-    }))
-    .slice(0, 3); // Get first 3 as related articles
+  const allArticles = await Promise.all(
+    allFiles
+      .filter((file) => file.endsWith('.adoc'))
+      .map(async (file) => {
+        const content = fs.readFileSync(
+          path.join(process.cwd(), 'content', file),
+          'utf-8'
+        );
+        const doc = asciidoctor.load(content, {
+          attributes: { showtitle: '' },
+          safe: 'safe',
+        });
+        return {
+          slug: file.replace('.adoc', ''),
+          title: doc.getDocumentTitle(),
+          category: doc.getAttribute('category') || 'Uncategorized',
+          description: doc.getAttribute('description') || '',
+        };
+      })
+  );
 
-  // Load document without including TOC in main content
+  // Get current article
   const document = asciidoctor.load(adocContent, {
     attributes: {
-      'toc': '',
-      'noheader': '',
-      'imagesdir': '/images'
+      toc: '',
+      noheader: '',
+      imagesdir: '/images',
     },
-    safe: 'unsafe'
+    safe: 'unsafe',
   });
 
-  // Get title from AsciiDoc document
-  const title = document.getTitle() || params.slug.replace(/-/g, ' ');
+  const title = document.getDocumentTitle() || params.slug.replace(/-/g, ' ');
+  const category = document.getAttribute('category') || 'Uncategorized';
+  const description = document.getAttribute('description') || '';
+
+  // Get related articles (same category)
+  const relatedArticles = allArticles
+    .filter(
+      (article) =>
+        article.slug !== params.slug && article.category === category
+    )
+    .slice(0, 3);
+
+  // Get all categories for sidebar
+  const categories = [
+    ...new Set(allArticles.map((article) => article.category)),
+  ];
 
   // Extract all sections to manually create TOC
-  const sections = document.getSections().map(section => ({
+  const sections = document.getSections().map((section) => ({
     id: section.getId(),
     title: section.getTitle(),
     level: section.getLevel(),
-    subSections: section.getSections().map(sub => ({
+    subSections: section.getSections().map((sub) => ({
       id: sub.getId(),
       title: sub.getTitle(),
       level: sub.getLevel(),
@@ -70,11 +97,11 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
 
   // Create manual TOC in HTML format
   let toc = '<ul class="sectlevel1">';
-  sections.forEach(section => {
+  sections.forEach((section) => {
     toc += `<li><a href="#${section.id}">${section.title}</a>`;
     if (section.subSections.length > 0) {
       toc += '<ul class="sectlevel2">';
-      section.subSections.forEach(sub => {
+      section.subSections.forEach((sub) => {
         toc += `<li><a href="#${sub.id}">${sub.title}</a></li>`;
       });
       toc += '</ul>';
@@ -97,23 +124,37 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
       html: contentHtml || '<p>Content not available</p>',
       toc: toc || '<p>TOC not available</p>',
       title,
-      relatedArticles: allArticles
+      category,
+      description,
+      relatedArticles,
+      categories,
     },
   };
 }
 
-export default function ArtikelPage({ html, toc, title, relatedArticles }: {
+export default function ArtikelPage({
+  html,
+  toc,
+  title,
+  category,
+  description,
+  relatedArticles,
+  categories,
+}: {
   html: string;
   toc: string;
   title: string;
-  relatedArticles: { slug: string; title: string }[];
+  category: string;
+  description: string;
+  relatedArticles: { slug: string; title: string; description: string }[];
+  categories: string[];
 }) {
   const router = useRouter();
 
   useEffect(() => {
     hljs.highlightAll();
 
-    // Add custom styling for images
+    // Add custom styling
     const style = document.createElement('style');
     style.textContent = `
       .imageblock {
@@ -184,6 +225,14 @@ export default function ArtikelPage({ html, toc, title, relatedArticles }: {
         margin-bottom: 0.5rem;
         color: #e5e7eb;
       }
+      .category-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background: #374151;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
     `;
     document.head.appendChild(style);
 
@@ -200,11 +249,11 @@ export default function ArtikelPage({ html, toc, title, relatedArticles }: {
     <>
       <Head>
         <title>{title} | IT Learning Hub</title>
-        <meta name="description" content={`Article about ${title}`} />
+        <meta name="description" content={description} />
       </Head>
       <Header />
       <div className="flex bg-gray-900 min-h-screen pt-16">
-        <Sidebar />
+        <Sidebar categories={categories} currentCategory={category} />
         <main className="flex-1 p-8 font-mono text-gray-100 ml-64 mr-64">
           <header className="mb-8">
             <div className="flex flex-col space-y-4">
@@ -213,13 +262,33 @@ export default function ArtikelPage({ html, toc, title, relatedArticles }: {
                   onClick={handleGoBack}
                   className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors duration-200 text-sm font-semibold"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                    />
                   </svg>
-                  Back
+                  Kembali
                 </button>
+                <Link
+                  href={`/kategori/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="category-badge hover:bg-gray-600 transition-colors"
+                >
+                  {category}
+                </Link>
               </div>
               <h1 className="text-3xl font-bold text-gray-100">{title}</h1>
+              {description && (
+                <p className="text-gray-400 text-lg">{description}</p>
+              )}
             </div>
           </header>
           <article
@@ -227,15 +296,25 @@ export default function ArtikelPage({ html, toc, title, relatedArticles }: {
             dangerouslySetInnerHTML={{ __html: html }}
           />
 
-          {/* Related Articles Section */}
           {relatedArticles.length > 0 && (
             <div className="related-articles max-w-5xl mx-auto">
-              <h2 className="text-2xl font-semibold mb-6">Related Articles</h2>
+              <h2 className="text-2xl font-semibold mb-6">
+                Artikel Terkait dalam {category}
+              </h2>
               <div className="related-articles-list">
                 {relatedArticles.map((article) => (
-                  <Link key={article.slug} href={`/artikel/${article.slug}`} passHref>
+                  <Link
+                    key={article.slug}
+                    href={`/artikel/${article.slug}`}
+                    passHref
+                  >
                     <div className="p-6 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-all duration-200 cursor-pointer">
-                      <h2 className="text-xl font-semibold mb-2">{article.title}</h2>
+                      <h3 className="text-xl font-semibold mb-2">
+                        {article.title}
+                      </h3>
+                      {article.description && (
+                        <p className="text-gray-400">{article.description}</p>
+                      )}
                     </div>
                   </Link>
                 ))}
@@ -246,7 +325,9 @@ export default function ArtikelPage({ html, toc, title, relatedArticles }: {
           <Footer />
         </main>
         <aside className="w-64 bg-gray-800 p-4 border-l border-gray-700 fixed right-0 top-16 h-[calc(100vh-64px)] overflow-y-auto">
-          <h2 className="text-lg font-semibold text-gray-100 mb-4">Table of Contents</h2>
+          <h2 className="text-lg font-semibold text-gray-100 mb-4">
+            Daftar Isi
+          </h2>
           <div
             className="text-gray-300 text-sm"
             dangerouslySetInnerHTML={{ __html: toc }}

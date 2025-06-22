@@ -4,7 +4,7 @@ export default function Header() {
   return (
     <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 flex items-center justify-between fixed top-0 left-0 right-0 z-50 shadow-lg">
       <h1 className="text-white text-2xl font-bold tracking-tight m-0 font-mono">
-        IT Learning Hub
+        RuangCodes
       </h1>
       <nav className="flex space-x-6">
         <Link 
