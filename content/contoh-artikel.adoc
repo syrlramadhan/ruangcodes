@@ -4,6 +4,7 @@ John Doe <john@example.com>
 :toclevels: 2
 :imagesdir: /images
 :category: Spring Boot
+:thumbnail: /images/spring-checkstyle.png
 :description: Artikel contoh tentang implementasi Spring Boot dengan kategori
 
 == Pendahuluan

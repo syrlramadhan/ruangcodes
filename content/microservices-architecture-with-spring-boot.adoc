@@ -4,6 +4,7 @@ John Doe <john@example.com>
 :toclevels: 2
 :imagesdir: /images
 :category: Spring Boot
+:thumbnail: /images/checkstyle-error.png
 
 == Pendahuluan
 image::microservices-architecture.png[Diagram Arsitektur Microservices, width=700, align=center]

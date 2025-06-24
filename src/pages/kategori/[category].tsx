@@ -59,7 +59,9 @@ export async function getStaticProps({
             title: doc.getDocumentTitle(),
             description: doc.getAttribute('description') || '',
             category,
+            thumbnail: doc.getAttribute('thumbnail') || '/images/default-thumbnail.png',
           };
+
         }
         return null;
       })
@@ -93,7 +95,7 @@ export default function CategoryPage({
   category,
   categories,
 }: {
-  articles: { slug: string; title: string; description: string; category: string }[];
+  articles: { slug: string; title: string; description: string; category: string; thumbnail: string }[]
   category: string;
   categories: string[];
 }) {
@@ -111,9 +113,8 @@ export default function CategoryPage({
       <Header />
       <div className="flex bg-gray-900 min-h-screen pt-16">
         <Sidebar categories={categories} currentCategory={category} />
-        <main className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${
-          isSidebarOpen ? 'ml-64' : 'ml-16'
-        }`}>
+        <main className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-16'
+          }`}>
           <div className="max-w-5xl mx-auto">
             <h1 className="text-3xl font-bold mb-6">
               Artikel dalam Kategori: {category}
@@ -125,25 +126,35 @@ export default function CategoryPage({
                 </p>
               </div>
             ) : (
-              <div className="grid gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {articles.map((article) => (
                   <Link
                     key={article.slug}
                     href={`/artikel/${article.slug}`}
-                    className="block p-6 bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-700 transition-colors"
+                    className="h-full flex flex-col p-6 bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-700 transition-colors"
                   >
-                    <h2 className="text-xl font-semibold mb-2">
+                    <div className="w-full aspect-[16/9] mb-4 overflow-hidden rounded-md bg-gray-700">
+                      <img
+                        src={article.thumbnail}
+                        alt={article.title}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                    <h2 className="text-xl font-semibold mb-2 line-clamp-2">
                       {article.title}
                     </h2>
                     {article.description && (
-                      <p className="text-gray-400">{article.description}</p>
+                      <p className="text-gray-400 line-clamp-3 mb-4">
+                        {article.description}
+                      </p>
                     )}
-                    <div className="mt-3">
+                    <div className="mt-auto pt-2">
                       <span className="inline-block px-3 py-1 text-xs bg-gray-700 rounded-full">
                         {article.category}
                       </span>
                     </div>
                   </Link>
+
                 ))}
               </div>
             )}

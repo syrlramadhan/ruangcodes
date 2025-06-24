@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Github, Twitter, Linkedin, Youtube } from 'lucide-react';
+import { Github, Twitter, Linkedin, Youtube, Instagram, Facebook } from 'lucide-react';
 
 export default function Header() {
   return (
@@ -26,13 +26,13 @@ export default function Header() {
           <Github size={24} />
         </Link>
         <Link 
-          href="https://twitter.com/ruangcodes" 
+          href="https://instagram.com/ruangcodes" 
           target="_blank"
           rel="noopener noreferrer"
           className="text-gray-300 hover:text-blue-400 transition-colors duration-300"
-          aria-label="Twitter"
+          aria-label="Instagram"
         >
-          <Twitter size={24} />
+          <Instagram size={24} />
         </Link>
         <Link 
           href="https://linkedin.com/company/ruangcodes" 
@@ -44,13 +44,13 @@ export default function Header() {
           <Linkedin size={24} />
         </Link>
         <Link 
-          href="https://youtube.com/ruangcodes" 
+          href="https://facebook.com/ruangcodes" 
           target="_blank"
           rel="noopener noreferrer"
           className="text-gray-300 hover:text-red-500 transition-colors duration-300"
-          aria-label="YouTube"
+          aria-label="Facebook"
         >
-          <Youtube size={24} />
+          <Facebook size={24} />
         </Link>
       </div>
     </header>

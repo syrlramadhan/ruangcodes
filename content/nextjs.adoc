@@ -3,6 +3,7 @@ Syahrul Ramadhan <syahrul@example.com>
 2025-06-23
 :toclevels: 2
 :category: Spring Boot
+:thumbnail: /images/checkstyle-success.png
 
 == Pendahuluan
 image::spring-checkstyle.png[Arsitektur Spring Boot dengan Checkstyle, width=600]

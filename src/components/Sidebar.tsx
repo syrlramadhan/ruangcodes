@@ -81,14 +81,14 @@ export default function Sidebar({
                   <Link
                     key={category}
                     href={`/kategori/${category.toLowerCase().replace(/\s+/g, '-')}`}
-                    className={`flex items-center px-3 py-2 rounded transition-colors ${
+                    className={`flex items-center px-2 py-2 rounded transition-colors ${
                       currentCategory === category
                         ? 'bg-blue-600 text-white'
                         : 'text-gray-300 hover:bg-gray-700'
                     } ${!isSidebarOpen && 'justify-center'}`}
                     title={!isSidebarOpen ? category : undefined}
                   >
-                    {categoryIcons[category] || <Bookmark size={isSidebarOpen ? 18 : 22} />}
+                    {categoryIcons[category] || <Bookmark size={isSidebarOpen ? 18 : 18} />}
                     {isSidebarOpen && (
                       <span className="ml-2">{category}</span>
                     )}
@@ -111,18 +111,18 @@ export default function Sidebar({
             <nav className="space-y-2">
               <Link
                 href="/"
-                className={`flex items-center px-3 py-2 text-gray-300 hover:bg-gray-700 rounded transition-colors ${!isSidebarOpen && 'justify-center'}`}
+                className={`flex items-center px-2 py-2 text-gray-300 hover:bg-gray-700 rounded transition-colors ${!isSidebarOpen && 'justify-center'}`}
                 title={!isSidebarOpen ? 'Beranda' : undefined}
               >
-                <Home size={isSidebarOpen ? 18 : 22} />
+                <Home size={isSidebarOpen ? 18 : 18} />
                 {isSidebarOpen && <span className="ml-2">Beranda</span>}
               </Link>
               <Link
                 href="/tentang"
-                className={`flex items-center px-3 py-2 text-gray-300 hover:bg-gray-700 rounded transition-colors ${!isSidebarOpen && 'justify-center'}`}
+                className={`flex items-center px-2 py-2 text-gray-300 hover:bg-gray-700 rounded transition-colors ${!isSidebarOpen && 'justify-center'}`}
                 title={!isSidebarOpen ? 'Tentang Kami' : undefined}
               >
-                <Info size={isSidebarOpen ? 18 : 22} />
+                <Info size={isSidebarOpen ? 18 : 18} />
                 {isSidebarOpen && <span className="ml-2">Tentang Kami</span>}
               </Link>
             </nav>

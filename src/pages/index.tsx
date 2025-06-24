@@ -24,10 +24,13 @@ export async function getStaticProps() {
       const document = asciidoctor.load(adocContent);
       const title = document.getDocumentTitle() || file.replace('.adoc', '').replace(/-/g, ' ');
       const category = document.getAttribute('category') || 'Uncategorized';
+      const thumbnail = document.getAttribute('thumbnail') || '/images/default-thumbnail.png';
+
       return {
         slug: file.replace('.adoc', ''),
         title,
-        category
+        category,
+        thumbnail,
       };
     });
 
@@ -35,18 +38,18 @@ export async function getStaticProps() {
   const categories = [...new Set(articles.map(article => article.category))];
 
   return {
-    props: { 
+    props: {
       articles,
-      categories 
+      categories
     },
   };
 }
 
-export default function Home({ 
-  articles, 
-  categories 
-}: { 
-  articles: { slug: string; title: string; category: string }[];
+export default function Home({
+  articles,
+  categories
+}: {
+  articles: { slug: string; title: string; category: string; thumbnail: string }[];
   categories: string[];
 }) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -65,9 +68,8 @@ export default function Home({
       <Header />
       <div className="flex bg-gray-900 min-h-screen pt-16">
         <Sidebar categories={categories} />
-        <main className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${
-          isSidebarOpen ? 'ml-64' : 'ml-16'
-        }`}>
+        <main className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-16'
+          }`}>
           <h1 className="text-4xl font-bold mb-2">📚 Latest RuangCodes Articles</h1>
           <p className="text-lg text-gray-400 mb-8">
             Tutorials, guides, and documentation powered by RuangCodes.
@@ -83,12 +85,20 @@ export default function Home({
             <Search className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
           </div>
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredArticles.map(({ slug, title }) => (
+            {filteredArticles.map(({ slug, title, thumbnail }) => (
               <Link key={slug} href={`/artikel/${slug}`} passHref>
                 <div className="h-full flex flex-col p-6 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-all duration-200 cursor-pointer">
-                  <h2 className="text-xl font-semibold mb-2 line-clamp-2">
-                    {title}
-                  </h2>
+
+                  <div className="w-full aspect-[16/9] mb-4 overflow-hidden rounded-md bg-gray-700">
+                    <img
+                      src={thumbnail}
+                      alt={title}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+
+                  <h2 className="text-xl font-semibold mb-2 line-clamp-2">{title}</h2>
+
                   <div className="mt-auto pt-4">
                     <span className="inline-block px-3 py-1 text-xs bg-gray-700 rounded-full text-gray-300">
                       {articles.find(a => a.slug === slug)?.category || 'Uncategorized'}
@@ -96,6 +106,7 @@ export default function Home({
                   </div>
                 </div>
               </Link>
+
             ))}
           </section>
           <Footer />

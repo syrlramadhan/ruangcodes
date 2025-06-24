@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import 'highlight.js/styles/atom-one-dark.css';
 import hljs from 'highlight.js';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSidebar } from '@/components/SidebarContext';
 
@@ -53,7 +53,9 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
           title: doc.getDocumentTitle(),
           category: doc.getAttribute('category') || 'Uncategorized',
           description: doc.getAttribute('description') || '',
+          thumbnail: doc.getAttribute('thumbnail') || '/images/default-thumbnail.png',
         };
+
       })
   );
 
@@ -127,7 +129,11 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
       title,
       category,
       description,
-      relatedArticles,
+      relatedArticles: relatedArticles.map(article => ({
+        ...article,
+        thumbnail: article.thumbnail || '/images/default-thumbnail.png',
+      })),
+
       categories,
     },
   };
@@ -147,13 +153,15 @@ export default function ArtikelPage({
   title: string;
   category: string;
   description: string;
-  relatedArticles: { slug: string; title: string; description: string }[];
+  relatedArticles: { slug: string; title: string; description: string; thumbnail: string }[]
   categories: string[];
 }) {
   const router = useRouter();
   const { isSidebarOpen } = useSidebar();
+  const [shareUrl, setShareUrl] = useState('');
 
   useEffect(() => {
+    setShareUrl(window.location.href);
     hljs.highlightAll();
 
     // Add custom styling
@@ -284,11 +292,10 @@ export default function ArtikelPage({
       <Header />
       <div className="flex bg-gray-900 min-h-screen pt-16">
         <Sidebar categories={categories} currentCategory={category} />
-        
+
         {/* Main Content */}
-        <main className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${
-          isSidebarOpen ? 'ml-64' : 'ml-16'
-        } ${isSidebarOpen ? 'mr-64' : 'mr-16'}`}>
+        <main className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-16'
+          } ${isSidebarOpen ? 'mr-64' : 'mr-16'}`}>
           <header className="mb-8">
             <div className="flex flex-col space-y-4">
               <div className="flex items-center space-x-4">
@@ -325,45 +332,95 @@ export default function ArtikelPage({
               )}
             </div>
           </header>
-          
+
           <article
             className="prose prose-invert max-w-5xl mx-auto bg-gray-800 p-8 rounded-lg border border-gray-700"
             dangerouslySetInnerHTML={{ __html: html }}
           />
+          <div className="max-w-5xl mx-auto mt-12">
+            <h2 className="text-xl font-semibold text-gray-200 mb-4">Bagikan Artikel Ini</h2>
+            <div className="flex items-center gap-4">
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(`${title} - ${shareUrl}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-green-600 hover:bg-green-500 text-white p-3 rounded-full transition"
+                title="Bagikan ke WhatsApp"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.52 3.48A11.84 11.84 0 0012 0C5.37 0 .07 6.33.07 13.93c0 2.47.67 4.86 1.95 6.96L0 24l3.24-1.02c1.94 1.12 4.13 1.7 6.38 1.7h.01c7.62 0 13.93-5.31 13.93-12.95a11.9 11.9 0 00-3.04-8.25zM12 21.84c-2.1 0-4.15-.57-5.93-1.65l-.42-.25-1.93.6.63-1.89-.28-.45c-1.17-1.88-1.8-4.04-1.8-6.27C2.27 7.1 6.72 2.66 12 2.66c3.17 0 6.15 1.39 8.22 3.83A9.63 9.63 0 0121.73 13c0 5.3-4.43 9.6-9.73 9.6zm5.3-7.2c-.29-.15-1.71-.85-1.97-.94s-.46-.14-.66.14-.76.94-.93 1.13-.34.21-.63.07-1.22-.45-2.33-1.45a8.59 8.59 0 01-1.58-1.95c-.16-.28-.02-.44.12-.58.13-.13.3-.35.45-.52s.2-.28.3-.46c.1-.18.05-.34-.02-.5s-.66-1.6-.9-2.2c-.24-.57-.5-.5-.66-.51h-.57c-.2 0-.52.08-.79.39s-1.03 1.01-1.03 2.45c0 1.44 1.05 2.83 1.2 3.03.15.2 2.06 3.15 5 4.42.7.3 1.25.48 1.67.61.7.22 1.33.19 1.84.12.56-.08 1.71-.7 1.95-1.36.24-.65.24-1.21.17-1.33-.06-.12-.26-.18-.54-.33z" />
+                </svg>
+              </a>
+              <a
+                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(title)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-blue-500 hover:bg-blue-400 text-white p-3 rounded-full transition"
+                title="Bagikan ke Twitter"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 4.56c-.89.4-1.84.66-2.83.78a4.92 4.92 0 002.15-2.71c-.94.56-1.98.97-3.08 1.2a4.91 4.91 0 00-8.38 4.48A13.94 13.94 0 011.67 3.15a4.89 4.89 0 001.52 6.54A4.89 4.89 0 01.96 9v.06a4.91 4.91 0 003.94 4.81c-.42.12-.86.18-1.31.18-.32 0-.63-.03-.93-.08a4.92 4.92 0 004.6 3.42A9.86 9.86 0 010 19.54a13.94 13.94 0 007.55 2.21c9.06 0 14.01-7.5 14.01-14 0-.21 0-.42-.02-.63a10.03 10.03 0 002.46-2.56z" />
+                </svg>
+              </a>
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-blue-700 hover:bg-blue-600 text-white p-3 rounded-full transition"
+                title="Bagikan ke Facebook"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M22.68 0H1.32C.6 0 0 .6 0 1.32v21.36C0 23.4.6 24 1.32 24H12.8v-9.33H9.69v-3.63h3.11V8.41c0-3.07 1.87-4.75 4.6-4.75 1.31 0 2.44.1 2.77.14v3.21h-1.9c-1.49 0-1.78.71-1.78 1.74v2.28h3.56l-.46 3.63h-3.1V24h6.08c.73 0 1.32-.6 1.32-1.32V1.32C24 .6 23.4 0 22.68 0z" />
+                </svg>
+              </a>
+            </div>
+          </div>
 
           {relatedArticles.length > 0 && (
             <div className="related-articles max-w-5xl mx-auto">
               <h2 className="text-2xl font-semibold mb-6">
                 Artikel Terkait dalam {category}
               </h2>
-              <div className="related-articles-list">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-stretch related-articles-list">
                 {relatedArticles.map((article) => (
                   <Link
                     key={article.slug}
                     href={`/artikel/${article.slug}`}
                     passHref
                   >
-                    <div className="p-6 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-all duration-200 cursor-pointer">
-                      <h3 className="text-xl font-semibold mb-2">
+                    <div className="h-full flex flex-col p-6 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-all duration-200">
+                      <div className="w-full aspect-[16/9] mb-4 overflow-hidden rounded-md bg-gray-700">
+                        <img
+                          src={article.thumbnail}
+                          alt={article.title}
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                      <h3 className="text-xl font-semibold mb-2 line-clamp-2 text-justify">
                         {article.title}
                       </h3>
                       {article.description && (
-                        <p className="text-gray-400">{article.description}</p>
+                        <p className="text-gray-400 line-clamp-3 flex-grow text-justify">
+                          {article.description}
+                        </p>
                       )}
+                      <div className="mt-4 pt-2 border-t border-gray-700">
+                        <span className="text-sm text-gray-400">Baca selengkapnya →</span>
+                      </div>
                     </div>
                   </Link>
                 ))}
               </div>
+
             </div>
           )}
 
           <Footer />
         </main>
-        
+
         {/* Right Sidebar (Table of Contents) */}
-        <aside className={`bg-gray-800 p-4 border-l border-gray-700 fixed top-16 h-[calc(100vh-64px)] overflow-y-auto transition-all duration-300 ${
-          isSidebarOpen ? 'w-64' : 'w-16'
-        } ${isSidebarOpen ? 'right-0' : 'right-0'}`}>
+        <aside className={`bg-gray-800 p-4 border-l border-gray-700 fixed top-16 h-[calc(100vh-64px)] overflow-y-auto transition-all duration-300 ${isSidebarOpen ? 'w-64' : 'w-16'
+          } ${isSidebarOpen ? 'right-0' : 'right-0'}`}>
           <h2 className={`text-lg font-semibold text-gray-100 mb-4 ${!isSidebarOpen && 'hidden'}`}>
             Daftar Isi
           </h2>
