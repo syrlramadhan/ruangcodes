@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
+import { useSidebar } from '@/components/SidebarContext';
 
 const asciidoctor = Asciidoctor();
 
@@ -96,10 +97,12 @@ export default function CategoryPage({
   category: string;
   categories: string[];
 }) {
+  const { isSidebarOpen } = useSidebar();
+
   return (
     <>
       <Head>
-        <title>Artikel {category} | IT Learning Hub</title>
+        <title>Artikel {category} | RuangCodes</title>
         <meta
           name="description"
           content={`Kumpulan artikel tentang ${category}`}
@@ -108,7 +111,9 @@ export default function CategoryPage({
       <Header />
       <div className="flex bg-gray-900 min-h-screen pt-16">
         <Sidebar categories={categories} currentCategory={category} />
-        <main className="flex-1 p-8 font-mono text-gray-100 ml-64">
+        <main className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${
+          isSidebarOpen ? 'ml-64' : 'ml-16'
+        }`}>
           <div className="max-w-5xl mx-auto">
             <h1 className="text-3xl font-bold mb-6">
               Artikel dalam Kategori: {category}

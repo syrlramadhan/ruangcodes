@@ -1,19 +1,58 @@
 import Link from 'next/link';
+import { Github, Twitter, Linkedin, Youtube } from 'lucide-react';
 
 export default function Header() {
   return (
     <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 flex items-center justify-between fixed top-0 left-0 right-0 z-50 shadow-lg">
-      <h1 className="text-white text-2xl font-bold tracking-tight m-0 font-mono">
-        RuangCodes
-      </h1>
-      <nav className="flex space-x-6">
+      {/* Left side - Logo */}
+      <div className="flex items-center space-x-2">
+        <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+          <span className="text-white text-xl font-bold">RC</span>
+        </div>
+        <h1 className="text-white text-2xl font-bold tracking-tight m-0 font-mono">
+          RuangCodes
+        </h1>
+      </div>
+
+      {/* Right side - Social Media */}
+      <div className="flex items-center space-x-4">
         <Link 
-          href="/" 
-          className="text-gray-300 text-lg font-medium hover:text-blue-400 transition-colors duration-300 flex items-center gap-1 font-mono"
+          href="https://github.com/ruangcodes" 
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-300 hover:text-white transition-colors duration-300"
+          aria-label="GitHub"
         >
-          <span className="text-xl">🏠</span> Home
+          <Github size={24} />
         </Link>
-      </nav>
+        <Link 
+          href="https://twitter.com/ruangcodes" 
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-300 hover:text-blue-400 transition-colors duration-300"
+          aria-label="Twitter"
+        >
+          <Twitter size={24} />
+        </Link>
+        <Link 
+          href="https://linkedin.com/company/ruangcodes" 
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-300 hover:text-blue-500 transition-colors duration-300"
+          aria-label="LinkedIn"
+        >
+          <Linkedin size={24} />
+        </Link>
+        <Link 
+          href="https://youtube.com/ruangcodes" 
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-300 hover:text-red-500 transition-colors duration-300"
+          aria-label="YouTube"
+        >
+          <Youtube size={24} />
+        </Link>
+      </div>
     </header>
   );
 }

@@ -8,6 +8,7 @@ import Sidebar from '@/components/Sidebar';
 import Footer from '@/components/Footer';
 import { useState } from 'react';
 import { Search } from 'lucide-react';
+import { useSidebar } from '@/components/SidebarContext';
 
 const asciidoctor = Asciidoctor();
 
@@ -49,6 +50,7 @@ export default function Home({
   categories: string[];
 }) {
   const [searchQuery, setSearchQuery] = useState('');
+  const { isSidebarOpen } = useSidebar();
 
   const filteredArticles = articles.filter(article =>
     article.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -63,10 +65,12 @@ export default function Home({
       <Header />
       <div className="flex bg-gray-900 min-h-screen pt-16">
         <Sidebar categories={categories} />
-        <main className="flex-1 p-8 font-mono text-gray-100 ml-64">
-          <h1 className="text-4xl font-bold mb-2">📚 Latest RungaCodes Articles</h1>
+        <main className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${
+          isSidebarOpen ? 'ml-64' : 'ml-16'
+        }`}>
+          <h1 className="text-4xl font-bold mb-2">📚 Latest RuangCodes Articles</h1>
           <p className="text-lg text-gray-400 mb-8">
-            Tutorials, guides, and documentation powered by AsciiDoc.
+            Tutorials, guides, and documentation powered by RuangCodes.
           </p>
           <div className="relative mb-8">
             <input
@@ -81,8 +85,15 @@ export default function Home({
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredArticles.map(({ slug, title }) => (
               <Link key={slug} href={`/artikel/${slug}`} passHref>
-                <div className="p-6 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-all duration-200 cursor-pointer">
-                  <h2 className="text-xl font-semibold mb-2">{title}</h2>
+                <div className="h-full flex flex-col p-6 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-all duration-200 cursor-pointer">
+                  <h2 className="text-xl font-semibold mb-2 line-clamp-2">
+                    {title}
+                  </h2>
+                  <div className="mt-auto pt-4">
+                    <span className="inline-block px-3 py-1 text-xs bg-gray-700 rounded-full text-gray-300">
+                      {articles.find(a => a.slug === slug)?.category || 'Uncategorized'}
+                    </span>
+                  </div>
                 </div>
               </Link>
             ))}

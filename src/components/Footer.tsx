@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
-    <footer style={{ textAlign: 'center', padding: '1.5rem', backgroundColor: '#f9f9f9', fontSize: '0.9rem', color: '#555', marginTop: '2rem' }}>
-      © {new Date().getFullYear()} AsciiDoc Blog. Dibuat dengan ❤️ dan Next.js.
+    <footer className="text-center p-6 text-sm text-gray-400 mt-8">
+      © {new Date().getFullYear()} RuangCodes. Create with ❤️ by XRide.
     </footer>
   );
 }

@@ -10,6 +10,7 @@ import 'highlight.js/styles/atom-one-dark.css';
 import hljs from 'highlight.js';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useSidebar } from '@/components/SidebarContext';
 
 const asciidoctor = Asciidoctor();
 
@@ -150,6 +151,7 @@ export default function ArtikelPage({
   categories: string[];
 }) {
   const router = useRouter();
+  const { isSidebarOpen } = useSidebar();
 
   useEffect(() => {
     hljs.highlightAll();
@@ -233,6 +235,34 @@ export default function ArtikelPage({
         font-size: 0.875rem;
         font-weight: 500;
       }
+      /* Right sidebar when collapsed */
+      aside.w-16 {
+        padding: 0.5rem;
+      }
+      aside.w-16 div {
+        display: none;
+      }
+      aside.w-16:hover {
+        width: 64px;
+      }
+      aside.w-16:hover div {
+        display: block;
+      }
+      /* Responsive adjustments */
+      @media (max-width: 1024px) {
+        aside {
+          display: none;
+        }
+        main {
+          margin-right: 0 !important;
+        }
+      }
+      @media (max-width: 768px) {
+        main {
+          margin-left: 0 !important;
+          padding: 1rem;
+        }
+      }
     `;
     document.head.appendChild(style);
 
@@ -248,13 +278,17 @@ export default function ArtikelPage({
   return (
     <>
       <Head>
-        <title>{title} | IT Learning Hub</title>
+        <title>{title} | RuangCodes</title>
         <meta name="description" content={description} />
       </Head>
       <Header />
       <div className="flex bg-gray-900 min-h-screen pt-16">
         <Sidebar categories={categories} currentCategory={category} />
-        <main className="flex-1 p-8 font-mono text-gray-100 ml-64 mr-64">
+        
+        {/* Main Content */}
+        <main className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${
+          isSidebarOpen ? 'ml-64' : 'ml-16'
+        } ${isSidebarOpen ? 'mr-64' : 'mr-16'}`}>
           <header className="mb-8">
             <div className="flex flex-col space-y-4">
               <div className="flex items-center space-x-4">
@@ -291,6 +325,7 @@ export default function ArtikelPage({
               )}
             </div>
           </header>
+          
           <article
             className="prose prose-invert max-w-5xl mx-auto bg-gray-800 p-8 rounded-lg border border-gray-700"
             dangerouslySetInnerHTML={{ __html: html }}
@@ -324,8 +359,12 @@ export default function ArtikelPage({
 
           <Footer />
         </main>
-        <aside className="w-64 bg-gray-800 p-4 border-l border-gray-700 fixed right-0 top-16 h-[calc(100vh-64px)] overflow-y-auto">
-          <h2 className="text-lg font-semibold text-gray-100 mb-4">
+        
+        {/* Right Sidebar (Table of Contents) */}
+        <aside className={`bg-gray-800 p-4 border-l border-gray-700 fixed top-16 h-[calc(100vh-64px)] overflow-y-auto transition-all duration-300 ${
+          isSidebarOpen ? 'w-64' : 'w-16'
+        } ${isSidebarOpen ? 'right-0' : 'right-0'}`}>
+          <h2 className={`text-lg font-semibold text-gray-100 mb-4 ${!isSidebarOpen && 'hidden'}`}>
             Daftar Isi
           </h2>
           <div
