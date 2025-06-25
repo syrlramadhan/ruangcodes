@@ -17,7 +17,7 @@ export default function Header() {
       {/* Right side - Social Media */}
       <div className="flex items-center space-x-4">
         <Link 
-          href="https://github.com/ruangcodes" 
+          href="https://github.com/syrlramadhan" 
           target="_blank"
           rel="noopener noreferrer"
           className="text-gray-300 hover:text-white transition-colors duration-300"
@@ -33,15 +33,6 @@ export default function Header() {
           aria-label="Instagram"
         >
           <Instagram size={24} />
-        </Link>
-        <Link 
-          href="https://linkedin.com/company/ruangcodes" 
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-300 hover:text-blue-500 transition-colors duration-300"
-          aria-label="LinkedIn"
-        >
-          <Linkedin size={24} />
         </Link>
         <Link 
           href="https://facebook.com/ruangcodes" 

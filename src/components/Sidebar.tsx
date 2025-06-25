@@ -69,6 +69,32 @@ export default function Sidebar({
         </button>
 
         <div className={`p-4 space-y-6 ${isSidebarOpen ? 'w-64' : 'w-16 mt-4'}`}>
+          {/* Menu Section */}
+          <div>
+            <h2 className={`text-lg font-semibold text-gray-100 mb-4 flex items-center ${!isSidebarOpen && 'justify-center'}`}>
+              <Menu size={isSidebarOpen ? 20 : 24} className={isSidebarOpen ? 'mr-2' : ''} />
+              {isSidebarOpen && 'Menu'}
+            </h2>
+            <nav className="space-y-2">
+              <Link
+                href="/"
+                className={`flex items-center px-2 py-2 text-gray-300 hover:bg-gray-700 rounded transition-colors ${!isSidebarOpen && 'justify-center'}`}
+                title={!isSidebarOpen ? 'Beranda' : undefined}
+              >
+                <Home size={isSidebarOpen ? 18 : 18} />
+                {isSidebarOpen && <span className="ml-2">Beranda</span>}
+              </Link>
+              <Link
+                href="/tentang"
+                className={`flex items-center px-2 py-2 text-gray-300 hover:bg-gray-700 rounded transition-colors ${!isSidebarOpen && 'justify-center'}`}
+                title={!isSidebarOpen ? 'Tentang Kami' : undefined}
+              >
+                <Info size={isSidebarOpen ? 18 : 18} />
+                {isSidebarOpen && <span className="ml-2">Tentang Kami</span>}
+              </Link>
+            </nav>
+          </div>
+          
           {/* Categories Section */}
           <div>
             <h2 className={`text-lg font-semibold text-gray-100 mb-4 flex items-center ${!isSidebarOpen && 'justify-center'}`}>
@@ -99,32 +125,6 @@ export default function Sidebar({
                   <X size={isSidebarOpen ? 18 : 22} className="text-gray-400" />
                 </div>
               )}
-            </nav>
-          </div>
-
-          {/* Menu Section */}
-          <div>
-            <h2 className={`text-lg font-semibold text-gray-100 mb-4 flex items-center ${!isSidebarOpen && 'justify-center'}`}>
-              <Menu size={isSidebarOpen ? 20 : 24} className={isSidebarOpen ? 'mr-2' : ''} />
-              {isSidebarOpen && 'Menu'}
-            </h2>
-            <nav className="space-y-2">
-              <Link
-                href="/"
-                className={`flex items-center px-2 py-2 text-gray-300 hover:bg-gray-700 rounded transition-colors ${!isSidebarOpen && 'justify-center'}`}
-                title={!isSidebarOpen ? 'Beranda' : undefined}
-              >
-                <Home size={isSidebarOpen ? 18 : 18} />
-                {isSidebarOpen && <span className="ml-2">Beranda</span>}
-              </Link>
-              <Link
-                href="/tentang"
-                className={`flex items-center px-2 py-2 text-gray-300 hover:bg-gray-700 rounded transition-colors ${!isSidebarOpen && 'justify-center'}`}
-                title={!isSidebarOpen ? 'Tentang Kami' : undefined}
-              >
-                <Info size={isSidebarOpen ? 18 : 18} />
-                {isSidebarOpen && <span className="ml-2">Tentang Kami</span>}
-              </Link>
             </nav>
           </div>
         </div>

@@ -1,0 +1,76 @@
+= Pengenalan Clean Architecture
+:description: Memahami konsep Clean Architecture untuk membangun aplikasi backend yang rapi, scalable, dan maintainable.
+:thumbnail: /images/clean-architecture-diagram.png
+:category: Pemrograman Golang
+:date: 2025-06-25T07:00:00
+
+Clean Architecture adalah pendekatan desain perangkat lunak yang membantu kita menulis kode yang bersih, terstruktur, dan mudah dirawat dalam jangka panjang. Konsep ini dikenalkan oleh Robert C. Martin (Uncle Bob) dan menjadi landasan dalam membangun aplikasi yang scalable.
+
+[.text-center]
+image::clean-architecture-diagram.png[Diagram Clean Architecture, width=600]
+
+== Apa Itu Clean Architecture?
+
+Clean Architecture memisahkan kode berdasarkan tanggung jawabnya (responsibility) dan mencegah dependensi dari lapisan luar ke lapisan dalam. Tujuan utamanya adalah menjaga agar domain atau logika bisnis tetap bersih dari detail implementasi seperti database, framework, atau antarmuka pengguna.
+
+== Prinsip Utama
+
+- Arah dependensi selalu menuju ke dalam (inner circle).
+- Lapisan terluar bisa berubah tanpa memengaruhi lapisan terdalam.
+- Domain adalah inti dari aplikasi.
+- Framework dan tools hanya sebagai detail implementasi.
+
+== Struktur Lapisan Clean Architecture
+
+[cols="1,3"]
+|===
+| Lapisan | Deskripsi
+
+| `Entity / Domain`
+| Menyimpan logika bisnis murni dan model data inti aplikasi.
+
+| `Use Case / Application`
+| Menyimpan aturan-aturan aplikasi. Menentukan bagaimana entitas digunakan.
+
+| `Interface Adapters`
+| Menyesuaikan data dari dan ke dunia luar (HTTP request, database, CLI, dsb).
+
+| `Frameworks & Drivers`
+| Lapisan terluar. Termasuk framework web (seperti Echo), database, server, dsb.
+|===
+
+== Contoh Struktur Folder
+
+[source,text]
+----
+.
+├── cmd/
+├── internal/
+│   ├── domain/            # Entity dan interface
+│   ├── usecase/           # Use case atau service
+│   ├── repository/        # Adapter untuk database
+│   └── delivery/          # Adapter untuk HTTP, CLI, dsb
+├── pkg/                   # Utility
+└── main.go
+----
+
+== Studi Kasus: Aplikasi Todo
+
+Bayangkan kita membuat aplikasi `Todo List`. Dengan Clean Architecture:
+
+- `domain` berisi `Todo` struct dan interface `TodoRepository`.
+- `usecase` berisi `AddTodo`, `GetTodos`, dll.
+- `repository` berisi implementasi database (MySQL/PostgreSQL).
+- `delivery/http` berisi handler untuk endpoint seperti `/todos`.
+
+== Kenapa Harus Clean Architecture?
+
+- **Maintainability:** Kode lebih mudah dirawat dan dikembangkan.
+- **Testability:** Setiap lapisan bisa diuji secara terpisah.
+- **Flexibility:** Ganti database, framework, atau UI tanpa mengubah logika bisnis.
+
+== Kesimpulan
+
+Clean Architecture adalah fondasi penting bagi developer backend. Meski awalnya terasa kompleks, dalam jangka panjang arsitektur ini membuat proyek jauh lebih mudah dikembangkan dan di-scale.
+
+xref:belajar-git.adoc[Mari lanjut belajar Version Control menggunakan Git →]

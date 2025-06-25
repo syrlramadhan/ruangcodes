@@ -17,22 +17,26 @@ export async function getStaticProps() {
   const files = fs.readdirSync(dirPath);
 
   const articles = files
-    .filter((file) => file.endsWith('.adoc'))
-    .map((file) => {
-      const filePath = path.join(dirPath, file);
-      const adocContent = fs.readFileSync(filePath, 'utf-8');
-      const document = asciidoctor.load(adocContent);
-      const title = document.getDocumentTitle() || file.replace('.adoc', '').replace(/-/g, ' ');
-      const category = document.getAttribute('category') || 'Uncategorized';
-      const thumbnail = document.getAttribute('thumbnail') || '/images/default-thumbnail.png';
+  .filter((file) => file.endsWith('.adoc'))
+  .map((file) => {
+    const filePath = path.join(dirPath, file);
+    const adocContent = fs.readFileSync(filePath, 'utf-8');
+    const document = asciidoctor.load(adocContent);
 
-      return {
-        slug: file.replace('.adoc', ''),
-        title,
-        category,
-        thumbnail,
-      };
-    });
+    const title = document.getDocumentTitle() || file.replace('.adoc', '').replace(/-/g, ' ');
+    const category = document.getAttribute('category') || 'Uncategorized';
+    const thumbnail = document.getAttribute('thumbnail') || '/images/default-thumbnail.png';
+    const date = document.getAttribute('date') || '1970-01-01T00:00:00'; // fallback
+
+    return {
+      slug: file.replace('.adoc', ''),
+      title,
+      category,
+      thumbnail,
+      date,
+    };
+  })
+  .sort((b, a) => new Date(b.date).getTime() - new Date(a.date).getTime()); // ↓ terbaru
 
   // Get all unique categories
   const categories = [...new Set(articles.map(article => article.category))];
@@ -49,7 +53,7 @@ export default function Home({
   articles,
   categories
 }: {
-  articles: { slug: string; title: string; category: string; thumbnail: string }[];
+  articles: { slug: string; title: string; category: string; thumbnail: string; date: string }[];
   categories: string[];
 }) {
   const [searchQuery, setSearchQuery] = useState('');

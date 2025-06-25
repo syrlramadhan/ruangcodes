@@ -1,0 +1,142 @@
+= Git Dasar untuk Developer
+:description: Panduan dasar Git untuk mengelola versi kode secara efisien, cocok untuk pemula dan developer backend.
+:thumbnail: /images/git-dasar-thumbnail.png
+:category: Tools
+:date: 2025-06-25T08:00:00
+
+Git adalah alat version control paling populer di dunia saat ini. Dengan Git, kita bisa melacak perubahan kode, berkolaborasi dengan tim, dan menjaga sejarah pengembangan aplikasi tetap rapi. Sangat penting untuk developer memahami dasar-dasarnya.
+
+[.text-center]
+image::git-dasar-diagram.png[Ilustrasi Version Control dengan Git, width=600]
+
+== Apa Itu Git?
+
+Git adalah sistem version control terdistribusi (Distributed VCS). Artinya, setiap developer memiliki salinan penuh dari seluruh histori proyek. Git sangat efisien, cepat, dan cocok untuk proyek kecil hingga besar.
+
+== Kenapa Harus Pakai Git?
+
+- Bisa melacak perubahan kode.
+- Mudah berkolaborasi dengan banyak orang.
+- Bisa kembali ke versi sebelumnya (rollback).
+- Banyak dipakai di dunia industri dan open-source.
+
+== Instalasi Git
+
+=== Windows
+Download Git dari https://git-scm.com dan ikuti proses instalasi.
+
+=== Linux (Ubuntu/Debian)
+[source,bash]
+----
+sudo apt update
+sudo apt install git
+----
+
+=== Cek Versi
+[source,bash]
+----
+git --version
+----
+
+== Konfigurasi Awal
+
+[source,bash]
+----
+git config --global user.name "Nama Kamu"
+git config --global user.email "email@example.com"
+----
+
+== Inisialisasi Repository Git
+
+[source,bash]
+----
+mkdir project-ku
+cd project-ku
+git init
+----
+
+Sekarang direktori tersebut menjadi repository Git.
+
+== Tahapan Dasar Git
+
+Git punya tiga area penting:
+- **Working Directory**: Folder tempat kita bekerja.
+- **Staging Area**: Menyimpan perubahan yang siap dikommit.
+- **Repository (HEAD)**: Menyimpan histori permanen.
+
+[.text-center]
+image::git-workflow.png[Diagram Git Workflow, width=500]
+
+== Perintah Git Paling Dasar
+
+=== 1. Menambahkan File
+[source,bash]
+----
+git add nama-file
+# atau semua sekaligus
+git add .
+----
+
+=== 2. Commit Perubahan
+[source,bash]
+----
+git commit -m "Pesan commit yang jelas"
+----
+
+=== 3. Melihat Status
+[source,bash]
+----
+git status
+----
+
+=== 4. Melihat Riwayat
+[source,bash]
+----
+git log
+----
+
+=== 5. Membatalkan Perubahan
+[source,bash]
+----
+git restore nama-file
+----
+
+== Menghubungkan ke Remote Repository
+
+Misalnya menggunakan GitHub:
+
+[source,bash]
+----
+git remote add origin https://github.com/username/project-ku.git
+git push -u origin main
+----
+
+== Branching: Kerja Paralel
+
+[source,bash]
+----
+git checkout -b fitur-login
+# kerjakan kodenya...
+git add .
+git commit -m "Tambah fitur login"
+git checkout main
+git merge fitur-login
+----
+
+== Kesalahan Umum Git
+
+- **Lupa commit:** Biasakan commit kecil dan jelas.
+- **Langsung edit di `main`:** Gunakan branch terpisah.
+- **Tidak menulis pesan commit:** Gunakan pesan yang deskriptif.
+
+== Tips Praktis
+
+- Commit sesering mungkin, tapi tetap logis.
+- Gunakan `.gitignore` untuk file yang tidak ingin dilacak.
+- Pelajari `git stash`, `rebase`, dan `cherry-pick` setelah mahir dasar.
+
+== Kesimpulan
+
+Git adalah sahabat terbaik developer. Dengan menguasai dasarnya, kamu sudah satu langkah lebih dekat jadi developer profesional!
+
+xref:belajar-terminal.adoc[Selanjutnya, kita akan belajar terminal Linux dasar untuk mempercepat pekerjaan backend developer →]

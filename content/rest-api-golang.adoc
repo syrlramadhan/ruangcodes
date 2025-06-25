@@ -1,0 +1,192 @@
+= Membuat REST API dengan Go
+:description: Panduan membangun REST API dengan Go menggunakan pendekatan Clean Architecture.
+:thumbnail: /images/rest-api-golang-thumbnail.png
+:category: Pemrograman Golang
+:date: 2025-06-25T10:00:00
+
+REST API adalah fondasi dari komunikasi antar aplikasi web modern. Di sini, kita akan belajar bagaimana membangun REST API menggunakan Golang dengan arsitektur yang rapi dan scalable: Clean Architecture!
+
+[.text-center]
+image::rest-api-golang-diagram.png[Diagram Struktur REST API dengan Clean Architecture, width=600]
+
+== Apa Itu REST API?
+
+REST (Representational State Transfer) adalah gaya arsitektur komunikasi yang memanfaatkan HTTP sebagai protokol dasarnya. REST API memungkinkan klien (seperti web frontend atau mobile app) berinteraksi dengan server secara efisien melalui URL dan method seperti `GET`, `POST`, `PUT`, dan `DELETE`.
+
+== Tools yang Akan Digunakan
+
+- **Golang**: Bahasa utama.
+- **Echo**: Framework web ringan untuk Go.
+- **GORM**: ORM untuk akses database.
+- **MySQL / PostgreSQL**: Contoh database relasional.
+
+== Struktur Project
+
+Struktur folder mengikuti Clean Architecture:
+
+[source,text]
+----
+.
+├── cmd/                 # Entry point aplikasi
+├── internal/
+│   ├── domain/          # Entity dan interface
+│   ├── usecase/         # Business logic
+│   ├── repository/      # Database adapter
+│   └── delivery/        # HTTP handler
+├── pkg/                 # Helper, config, utils
+└── main.go              # Inisialisasi dan start server
+----
+
+== Contoh Use Case: API Todo List
+
+Mari kita bangun fitur `Todo List` sederhana.
+
+=== 1. Entity
+
+File: `internal/domain/todo.go`
+
+[source,go]
+----
+package domain
+
+type Todo struct {
+    ID    int64
+    Title string
+    Done  bool
+}
+
+type TodoRepository interface {
+    Create(todo *Todo) error
+    GetAll() ([]Todo, error)
+}
+----
+
+=== 2. Use Case
+
+File: `internal/usecase/todo_usecase.go`
+
+[source,go]
+----
+package usecase
+
+import "yourapp/internal/domain"
+
+type TodoUsecase struct {
+    Repo domain.TodoRepository
+}
+
+func (u *TodoUsecase) CreateTodo(title string) error {
+    todo := &domain.Todo{Title: title, Done: false}
+    return u.Repo.Create(todo)
+}
+
+func (u *TodoUsecase) GetTodos() ([]domain.Todo, error) {
+    return u.Repo.GetAll()
+}
+----
+
+=== 3. Repository (GORM)
+
+File: `internal/repository/mysql_todo.go`
+
+[source,go]
+----
+package repository
+
+import (
+    "gorm.io/gorm"
+    "yourapp/internal/domain"
+)
+
+type mysqlTodo struct {
+    DB *gorm.DB
+}
+
+func NewMySQLTodo(db *gorm.DB) domain.TodoRepository {
+    return &mysqlTodo{DB: db}
+}
+
+func (r *mysqlTodo) Create(todo *domain.Todo) error {
+    return r.DB.Create(todo).Error
+}
+
+func (r *mysqlTodo) GetAll() ([]domain.Todo, error) {
+    var todos []domain.Todo
+    err := r.DB.Find(&todos).Error
+    return todos, err
+}
+----
+
+=== 4. Delivery Layer (Echo Handler)
+
+File: `internal/delivery/todo_handler.go`
+
+[source,go]
+----
+package delivery
+
+import (
+    "net/http"
+    "github.com/labstack/echo/v4"
+    "yourapp/internal/usecase"
+)
+
+type TodoHandler struct {
+    Usecase *usecase.TodoUsecase
+}
+
+func (h *TodoHandler) RegisterRoutes(e *echo.Echo) {
+    e.POST("/todos", h.Create)
+    e.GET("/todos", h.GetAll)
+}
+
+func (h *TodoHandler) Create(c echo.Context) error {
+    var body struct{ Title string }
+    if err := c.Bind(&body); err != nil {
+        return c.JSON(http.StatusBadRequest, err)
+    }
+
+    if err := h.Usecase.CreateTodo(body.Title); err != nil {
+        return c.JSON(http.StatusInternalServerError, err)
+    }
+
+    return c.JSON(http.StatusCreated, map[string]string{"message": "Todo created"})
+}
+
+func (h *TodoHandler) GetAll(c echo.Context) error {
+    todos, err := h.Usecase.GetTodos()
+    if err != nil {
+        return c.JSON(http.StatusInternalServerError, err)
+    }
+
+    return c.JSON(http.StatusOK, todos)
+}
+----
+
+== Menjalankan Aplikasi
+
+1. Inisialisasi database dan `.env` config.
+2. Jalankan server:
+[source,bash]
+----
+go run main.go
+----
+
+3. Coba akses endpoint:
+- `GET /todos`
+- `POST /todos`
+
+== Testing dan Postman
+
+Gunakan Postman atau `curl` untuk mengetes endpoint secara langsung.
+
+[source,bash]
+----
+curl -X POST http://localhost:8080/todos -H "Content-Type: application/json" -d '{"title": "Belajar Go"}'
+----
+
+== Kesimpulan
+
+Membangun REST API dengan Go dan Clean Architecture membuat struktur kode lebih terorganisir dan mudah dikembangkan. Mulai dari `domain`, `usecase`, hingga `delivery`, semuanya punya tanggung jawab yang jelas.
+
+xref:git-dasar-untuk-developer.adoc[Berikutnya, kita akan belajar cara deployment aplikasi Golang dengan Docker dan CI/CD →]

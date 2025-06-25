@@ -60,15 +60,19 @@ export async function getStaticProps({
             description: doc.getAttribute('description') || '',
             category,
             thumbnail: doc.getAttribute('thumbnail') || '/images/default-thumbnail.png',
+            date: doc.getAttribute('date') || '1970-01-01T00:00:00', // tambahkan date
           };
-
         }
         return null;
       })
   );
 
+
   // Filter out null values
-  const filteredArticles = articles.filter((article) => article !== null);
+  const filteredArticles = articles
+    .filter((article) => article !== null)
+    .sort((b, a) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
 
   // Get all categories for sidebar
   const allCategories = new Set<string>();
@@ -95,7 +99,7 @@ export default function CategoryPage({
   category,
   categories,
 }: {
-  articles: { slug: string; title: string; description: string; category: string; thumbnail: string }[]
+  articles: { slug: string; title: string; description: string; category: string; thumbnail: string; date: string }[]
   category: string;
   categories: string[];
 }) {

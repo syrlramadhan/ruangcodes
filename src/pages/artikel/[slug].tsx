@@ -79,7 +79,7 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
       (article) =>
         article.slug !== params.slug && article.category === category
     )
-    .slice(0, 3);
+    .slice(0, 2);
 
   // Get all categories for sidebar
   const categories = [
@@ -117,10 +117,12 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
   let contentHtml = '';
   const blocks = document.getBlocks();
   for (const block of blocks) {
-    if (block.getContext() !== 'toc' && block.getContext() !== 'preamble') {
+    if (block.getContext() !== 'toc') {
       contentHtml += block.convert();
     }
   }
+
+  contentHtml = contentHtml.replace(/href="([^"]+)\.html"/g, 'href="/artikel/$1"');
 
   return {
     props: {

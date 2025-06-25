@@ -1,0 +1,95 @@
+= Belajar Terminal Linux Dasar
+:description: Panduan praktis memahami perintah dasar terminal Linux untuk menunjang pekerjaan backend developer.
+:thumbnail: /images/terminal-thumbnail.png
+:category: Tools
+:date: 2025-06-25T09:00:00
+
+Terminal Linux adalah alat utama bagi backend developer. Dengan menguasainya, kamu bisa bekerja lebih cepat, mengelola server, menjalankan perintah, dan memahami apa yang sebenarnya terjadi di balik layar.
+
+[.text-center]
+image::terminal-linux.png[Tampilan Terminal Linux, width=600]
+
+== Apa Itu Terminal?
+
+Terminal adalah antarmuka teks yang memungkinkan kita untuk berinteraksi langsung dengan sistem operasi. Terminal juga disebut shell atau command line interface (CLI).
+
+Di Linux, shell yang paling umum digunakan adalah `bash`.
+
+== Kenapa Backend Developer Harus Bisa Terminal?
+
+- Mengelola server (SSH, proses, file)
+- Menjalankan script otomatisasi
+- Menggunakan tools developer (Git, Docker, dsb)
+- Debugging lebih cepat
+- Tidak selalu tersedia antarmuka GUI di server
+
+== Perintah Dasar Terminal Linux
+
+Berikut beberapa perintah dasar yang wajib dikuasai:
+
+[cols="1,3"]
+|===
+| Perintah | Fungsi
+
+| `pwd`
+| Menampilkan direktori aktif saat ini
+
+| `ls`
+| Melihat daftar file/direktori
+
+| `cd`
+| Berpindah direktori
+
+| `touch`
+| Membuat file kosong
+
+| `mkdir`
+| Membuat direktori baru
+
+| `rm`
+| Menghapus file
+
+| `rmdir`
+| Menghapus direktori kosong
+
+| `cp`
+| Menyalin file/direktori
+
+| `mv`
+| Memindahkan/mengganti nama file/direktori
+
+| `cat`, `less`
+| Melihat isi file
+
+| `nano`, `vim`
+| Mengedit file langsung di terminal
+
+| `clear`
+| Membersihkan tampilan terminal
+|===
+
+== Navigasi dan Shortcut Penting
+
+- `Ctrl + A` → Pindah ke awal baris
+- `Ctrl + E` → Pindah ke akhir baris
+- `Ctrl + C` → Batalkan perintah yang sedang berjalan
+- `Ctrl + L` → Clear terminal (seperti `clear`)
+- Panah atas/bawah → Riwayat perintah
+
+== Manajemen Proses
+
+- `top` → Melihat proses berjalan
+- `ps aux` → Daftar semua proses
+- `kill <PID>` → Menghentikan proses
+
+== Tips Tambahan
+
+- Gunakan `tab` untuk autocomplete nama file/direktori.
+- Gunakan `man <perintah>` untuk melihat dokumentasi bawaan Linux.
+- Gunakan `&&` untuk menjalankan dua perintah sekaligus.
+
+== Kesimpulan
+
+Menguasai terminal Linux akan mempercepat workflow sebagai developer backend. Semakin sering kamu menggunakannya, semakin terbiasa dan produktif kamu akan jadi.
+
+xref:rest-api-golang.adoc[Selanjutnya, kita akan mulai membuat REST API dengan Golang →]

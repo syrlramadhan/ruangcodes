@@ -37,6 +37,23 @@ p {
   @apply mb-4;
 }
 
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.prose table, 
+.prose th, 
+.prose td {
+  border: 1px solid #4B5563; /* Tailwind: gray-600 */
+}
+
+.prose th, 
+.prose td {
+  padding: 0.75rem;
+  text-align: left;
+}
+
 /* Base image styling */
 .imageblock img {
   max-width: 100%;
