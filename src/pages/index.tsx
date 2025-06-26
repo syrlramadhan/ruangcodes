@@ -84,7 +84,7 @@ export default function Home({
         <title>RuangCodes</title>
         <meta
           name="description"
-          content="Panduan dan tutorial teknologi modern dengan AsciiDoc dan Next.js"
+          content="Panduan dan tutorial teknologi modern"
         />
       </Head>
       <Header />
