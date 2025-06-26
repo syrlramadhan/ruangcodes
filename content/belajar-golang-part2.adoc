@@ -1,0 +1,86 @@
+= Variabel, Tipe Data, dan Konstanta
+:description: Pelajari cara mendeklarasikan variabel, memahami tipe data, serta menggunakan konstanta dalam bahasa Go.
+:thumbnail: /images/go-dasar-overview.png
+:categories: Dasar pemrograman Go, Artikel
+:toc: left
+:date: 2025-06-21T01:31:00+07:00
+:link-base-path: /artikel/
+
+[.text-center]
+image::go-dasar-overview.png[Logo Golang, width=500]
+
+== Apa Itu Variabel?
+
+Variabel adalah tempat menyimpan data sementara di dalam program. Di Go, variabel harus dideklarasikan sebelum digunakan.
+
+Contoh:
+
+[source,go]
+----
+var nama string = "Syahrul"
+umur := 21
+aktif := true
+----
+
+Penjelasan:
+
+[vertical]
+`var nama string = "Syahrul"`:: Mendeklarasikan variabel dengan tipe eksplisit
+`umur := 21`:: Mendeklarasikan dan menginisialisasi variabel dengan *type inference*
+`aktif := true`:: Tipe `bool` dengan nilai `true`
+
+== Tipe Data dalam Go
+
+Tipe data menentukan jenis nilai yang bisa disimpan dalam variabel.
+
+[cols="1,2"]
+|===
+| `string` | Menyimpan teks, contoh: `"Halo"`
+| `int`, `int32`, `int64` | Menyimpan bilangan bulat
+| `float32`, `float64` | Menyimpan angka desimal
+| `bool` | Hanya `true` atau `false`
+| `byte`, `rune` | Representasi karakter dan Unicode
+|===
+
+== Konstanta
+
+Konstanta (`const`) adalah variabel yang nilainya tidak bisa diubah setelah dideklarasikan.
+
+[source,go]
+----
+const pi = 3.14
+const appName string = "RuangCodes"
+----
+
+Konstanta cocok digunakan untuk nilai yang tetap selama program berjalan.
+
+== Tips Penggunaan
+
+[vertical]
+Gunakan `:=`:: Saat ingin deklarasi cepat di dalam fungsi
+Gunakan `var`:: Saat deklarasi di level global atau tanpa inisialisasi
+Gunakan `const`:: Saat nilai tidak boleh berubah
+
+== Contoh Praktik
+
+[source,go]
+----
+package main
+
+import "fmt"
+
+func main() {
+    const appName = "RuangCodes"
+    var tahun int = 2025
+    umur := 21
+    aktif := true
+
+    fmt.Println(appName, tahun, umur, aktif)
+}
+----
+
+== Penutup
+
+Sekarang kamu sudah paham tentang variabel, tipe data, dan konstanta dalam Go. Di part selanjutnya, kita akan masuk ke pengambilan keputusan dan perulangan.
+
+xref:belajar-golang-part3.adoc[Lanjut ke Percabangan dan Perulangan →]

@@ -1,0 +1,132 @@
+= Tugas Praktik: Uji Pemahaman Dasar Go
+:description: Saatnya latihan! Bikin program sederhana untuk menguji pemahamanmu soal variabel, tipe data, if-else, switch, dan perulangan di Golang.
+:thumbnail: /images/go-dasar-overview.png
+:categories: Dasar pemrograman Go, Artikel
+:toc: left
+:date: 2025-06-23T01:31:00+07:00
+:link-base-path: /artikel/
+
+== Selamat Datang di Arena Latihan 💪
+
+Sudah belajar Go dari part 1 sampai 3? Mantap!
+
+Sekarang saatnya kamu *praktik langsung*. Kita akan bikin beberapa mini tugas yang menguji kemampuan kamu dalam:
+
+* Menyimpan data dengan variabel
+* Membuat keputusan dengan `if` dan `switch`
+* Melakukan perulangan dengan `for`
+
+Semangat, ya! 🚀
+
+[.text-center]
+image::go-dasar-overview.png[Logo Golang, width=500]
+
+== 🎯 Tugas 1: Biodata Sederhana
+
+Buat program yang menyimpan data berikut:
+
+- Nama
+- Umur
+- Status aktif (true/false)
+
+Cetak hasilnya seperti ini:
+
+[source,text]
+----
+Halo, nama saya Syahrul.
+Umur saya 21 tahun.
+Apakah saya aktif? true
+----
+
+Gunakan `fmt.Println()` untuk mencetak ke terminal.
+
+== 🧠 Tugas 2: Penilaian Ujian
+
+Buat program yang menerima sebuah nilai (misal 85) lalu menampilkan pesan seperti berikut:
+
+[source,text]
+----
+Nilai kamu: 85
+Kategori: B (Bagus!)
+----
+
+Gunakan `if...else` dengan kriteria berikut:
+
+[cols="1,3"]
+|===
+| Nilai | Kategori
+| ≥ 90 | A (Luar biasa!)
+| ≥ 75 | B (Bagus!)
+| ≥ 60 | C (Cukup)
+| < 60 | D (Belajar lagi, semangat!)
+|===
+
+== 🎨 Tugas 3: Warna Favorit
+
+Gunakan `switch` untuk menampilkan deskripsi warna favorit pengguna.
+
+Contoh:
+
+[source,go]
+----
+warna := "biru"
+----
+
+Hasil:
+
+[source,text]
+----
+Warna biru: tenang dan adem.
+----
+
+Coba buat `switch` dengan minimal 3 pilihan warna dan 1 default.
+
+== 🔁 Tugas 4: Cetak Segitiga Bintang
+
+Bikin program pakai `for` untuk mencetak segitiga bintang seperti ini:
+
+[source,text]
+----
+*
+**
+***
+****
+*****
+----
+
+Hint: Gunakan dua `for` bersarang.
+
+== 🎯 Tugas 5: Daftar Belanjaan
+
+Gunakan `array` atau `slice` untuk menyimpan daftar belanjaan, lalu tampilkan dengan `range`.
+
+Contoh output:
+
+[source,text]
+----
+Daftar belanja hari ini:
+- Kopi
+- Gula
+- Tepung
+----
+
+== Bonus 💡: Gabungkan Semua
+
+Tantangan seru! Coba gabungkan semua elemen di atas dalam satu aplikasi terminal sederhana.
+
+Misalnya:
+
+* Ambil input nama dan umur
+* Tampilkan sapaan personal
+* Tanyakan nilai, lalu beri penilaian
+* Cetak daftar favorit, dan lain-lain
+
+Bebas berkreasi, yang penting semua fitur tercakup.
+
+== Penutup
+
+Kalau kamu bisa menyelesaikan semua tugas di atas, selamat! Kamu sudah menguasai dasar-dasar penting di Golang 🎉
+
+Selanjutnya, kita akan belajar cara membuat **fungsi** biar kode kita makin rapi dan bisa dipakai ulang.
+
+xref:belajar-golang-part5.adoc[Lanjut ke Fungsi →]

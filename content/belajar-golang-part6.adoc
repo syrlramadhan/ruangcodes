@@ -1,0 +1,123 @@
+= Menangani Error di Go
+:description: Di Go, error adalah bagian penting dari pemrograman. Yuk kita pelajari cara membuat, menangani, dan bahkan membuat custom error sendiri!
+:thumbnail: /images/go-dasar-overview.png
+:categories: Dasar pemrograman Go, Artikel
+:toc: left
+:date: 2025-06-25T01:31:00+07:00
+:link-base-path: /artikel/
+
+[.text-center]
+image::go-dasar-overview.png[Logo Golang, width=500]
+
+== Error adalah Interface
+Di Go, error bukanlah sekadar pesan teks biasa — ia adalah *interface*! Ini artinya kamu bisa membuat error versi kamu sendiri, selama memenuhi kontrak dari interface `error`.
+
+[source,go]
+----
+type error interface {
+    Error() string
+}
+----
+
+Biasanya kamu tidak perlu membuatnya manual, karena Go sudah menyediakan fungsi untuk membuat error:
+
+[source,go]
+----
+import "errors"
+
+err := errors.New("Oops, terjadi kesalahan!")
+----
+
+== Menangani Error
+
+Saat sebuah fungsi bisa gagal, biasanya ia akan mengembalikan `error` sebagai nilai kedua:
+
+[source,go]
+----
+hasil, err := someFunction()
+if err != nil {
+    fmt.Println("Terjadi error:", err)
+}
+----
+
+== Membuat Error Kustom
+
+Karena `error` adalah interface, kamu bisa membuat `struct` yang implementasi method `Error()`. Contohnya:
+
+[source,go]
+----
+type ValidationError struct {
+    Field string
+}
+
+func (v ValidationError) Error() string {
+    return "Validasi gagal di field: " + v.Field
+}
+----
+
+Penggunaan:
+
+[source,go]
+----
+err := ValidationError{Field: "username"}
+fmt.Println(err.Error())
+----
+
+== `panic`, `recover`, dan `defer`
+
+Go juga menyediakan mekanisme untuk menangani kejadian luar biasa (mirip `try-catch`, tapi beda konsep).
+
+=== `panic`
+
+Digunakan untuk menghentikan program secara paksa ketika terjadi hal yang sangat fatal.
+
+[source,go]
+----
+panic("Sesuatu yang sangat buruk terjadi!")
+----
+
+=== `defer`
+
+Kode dalam `defer` akan selalu dijalankan *setelah* fungsi selesai dieksekusi — bahkan jika terjadi `panic`.
+
+[source,go]
+----
+func main() {
+    defer fmt.Println("Akan selalu dijalankan")
+    fmt.Println("Sebelum panic")
+    panic("Boom!")
+}
+----
+
+=== `recover`
+
+Fungsi ini digunakan untuk menangkap `panic` agar program tidak langsung mati.
+
+[source,go]
+----
+func tangkapPanic() {
+    if r := recover(); r != nil {
+        fmt.Println("Panic ditangkap:", r)
+    }
+}
+
+func main() {
+    defer tangkapPanic()
+    panic("Ups!")
+}
+----
+
+== Kapan Menggunakan Apa?
+
+[cols="1,3"]
+|===
+| ✅ error | Untuk kondisi yang bisa diprediksi, seperti input salah, file tidak ditemukan, dll.
+| 🚨 panic | Untuk kondisi yang benar-benar darurat dan tak terduga, seperti bug logika yang fatal.
+|🛑 recover | Digunakan *hanya* jika kamu punya alasan kuat untuk lanjut meskipun terjadi panic.
+|===
+
+== Penutup
+
+Di Go, error adalah bagian dari desain — bukan pengecualian. Biasakan untuk selalu menangani error agar aplikasi kamu lebih andal!
+
+xref:belajar-golang-part7.adoc[Lanjut ke Pointer dan Referensi Data →]

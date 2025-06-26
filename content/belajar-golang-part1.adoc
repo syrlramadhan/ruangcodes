@@ -1,0 +1,84 @@
+= Pengenalan Go dan Tools Dasar
+:description: Yuk kenalan dengan bahasa pemrograman Go! Kita akan bahas sejarah, keunggulan, kapan digunakan, serta tools dan struktur dasarnya.
+:thumbnail: /images/go-dasar-overview.png
+:categories: Dasar pemrograman Go, Artikel
+:toc: left
+:date: 2025-06-20T01:31:00+07:00
+:link-base-path: /artikel/
+
+== Apa Itu Go (Golang)?
+
+Bahasa Go (atau Golang) dikembangkan oleh Google dan diperkenalkan pertama kali tahun 2009. Go dibuat untuk menjawab kebutuhan pemrograman modern yang membutuhkan performa tinggi seperti C/C++, tapi dengan sintaksis yang lebih sederhana.
+
+[.text-center]
+image::go-dasar-overview.png[Logo Golang, width=500]
+
+== Sejarah Singkat Go
+
+Go dikembangkan oleh tiga insinyur Google: Robert Griesemer, Rob Pike, dan Ken Thompson. Mereka ingin membuat bahasa yang:
+
+* Cepat dikompilasi
+* Mudah dibaca dan dipelajari
+* Memiliki garbage collector
+* Mendukung concurrency secara native
+
+== Kenapa Harus Go?
+
+[cols="1,3"]
+|===
+| ⚡ Cepat | Go dikompilasi langsung menjadi kode mesin
+| 📦 Sederhana | Sintaksis minimalis dan mudah dibaca
+| 🔒 Aman | Tipe data kuat dan static typing
+| 🧵 Concurrency | Punya goroutine dan channel untuk proses paralel
+| 🛠️ Tools Built-in | Format otomatis (`gofmt`), testing (`go test`), dokumentasi (`go doc`)
+|===
+
+== Kapan Sebaiknya Pakai Go?
+
+Go cocok digunakan untuk:
+
+* Backend API services
+* Tools Command Line (CLI)
+* Aplikasi jaringan (networking)
+* Aplikasi microservices
+* Sistem yang butuh performa tinggi dan stabil
+
+== Tools dan Editor yang Direkomendasikan
+
+Berikut beberapa tools penting untuk mulai ngoding dengan Go:
+
+[cols="1,3"]
+|===
+| 🧰 Go SDK | https://go.dev/dl\[Download Go SDK dari situs resmi]
+| 💻 Editor | VS Code (rekomendasi), Goland (berbayar)
+| 🔧 Plugin | `Go` extension di VS Code
+| 📦 Package Manager | `go mod` untuk dependency management
+|===
+
+== Struktur Dasar Program Go
+
+Ini adalah contoh program Go paling sederhana:
+
+[source,go]
+----
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Halo, Syahrul!")
+}
+----
+
+Penjelasan singkat:
+
+[vertical]
+`package main`:: Menandakan entry point program
+`import "fmt"`:: Mengimpor package untuk format teks
+`func main()`:: Fungsi utama yang akan dieksekusi saat program dijalankan
+
+== Penutup
+
+Kita baru saja kenalan dengan Go. Di part berikutnya, kita akan bahas cara mendeklarasikan variabel, tipe data, dan konstanta!
+
+xref:belajar-golang-part2.adoc[Lanjut ke Variabel dan Tipe Data →]

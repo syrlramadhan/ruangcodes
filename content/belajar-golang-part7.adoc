@@ -1,0 +1,91 @@
+= Pointer dan Referensi Data
+:description: Belajar memahami pointer dan referensi data di Golang dengan cara yang seru dan mudah dipahami.
+:thumbnail: /images/go-dasar-overview.png
+:categories: Dasar pemrograman Go, Artikel
+:toc: left
+:date: 2025-06-26T01:31:00+07:00
+:link-base-path: /artikel/
+
+[.text-center]
+image::go-dasar-overview.png[Logo Golang, width=500]
+
+== Apa Itu Pointer?
+Bayangin kamu punya rumah, dan kamu kasih alamat rumah itu ke temanmu. Temanmu bisa datang dan mengubah isi rumahnya — bukan hanya fotokopi rumahnya.
+
+Nah, pointer di Go itu seperti alamat rumah tadi. Dia menyimpan alamat dari variabel lain.
+
+== Kenapa Harus Belajar Pointer?
+
+* Untuk efisiensi memori
+* Untuk menghindari penyalinan data besar
+* Untuk mengubah data asli di fungsi
+
+== Contoh Pointer Sederhana
+
+[source,go]
+----
+package main
+
+import "fmt"
+
+func main() {
+    var angka int = 10
+    var pointer *int = &angka
+
+    fmt.Println("Nilai:", angka)
+    fmt.Println("Alamat:", pointer)
+    fmt.Println("Nilai dari pointer:", *pointer)
+}
+----
+
+Penjelasan:
+[vertical]
+`&angka`:: Mengambil alamat dari variabel `angka`
+`*pointer`:: Mengambil nilai dari alamat yang disimpan di `pointer`
+
+== Pointer dan Fungsi
+
+[source,go]
+----
+func ubahNilai(n *int) {
+    *n = *n + 10
+}
+
+func main() {
+    x := 5
+    ubahNilai(&x)
+    fmt.Println(x) // hasilnya jadi 15
+}
+----
+
+== Pointer dan Struct
+
+[source,go]
+----
+type User struct {
+    Nama string
+}
+
+func ubahNama(u *User) {
+    u.Nama = "RuangCodes"
+}
+
+func main() {
+    user := User{Nama: "Anonim"}
+    ubahNama(&user)
+    fmt.Println(user.Nama)
+}
+----
+
+== Tips Belajar Pointer
+
+[IMPORTANT]
+====
+Jangan takut dengan pointer! Coba ubah-ubah kodenya, print alamat dan nilainya, dan lihat apa yang terjadi.
+====
+
+== Kesimpulan
+
+Pointer memang kelihatan ribet di awal, tapi dengan pemahaman yang tepat, pointer akan jadi alat yang sangat berguna dalam menulis kode Go yang efisien.
+
+xref:belajar-golang-part8.adoc[Lanjut ke Materi Selanjutnya →]

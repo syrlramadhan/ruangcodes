@@ -11,6 +11,7 @@ import hljs from 'highlight.js';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSidebar } from '@/components/SidebarContext';
+import Image from 'next/image';
 
 const asciidoctor = Asciidoctor();
 
@@ -48,14 +49,16 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
           attributes: { showtitle: '' },
           safe: 'safe',
         });
+        const categories = (doc.getAttribute('categories') || 'Uncategorized')
+          .split(',')
+          .map((cat: string) => cat.trim());
         return {
           slug: file.replace('.adoc', ''),
           title: doc.getDocumentTitle(),
-          category: doc.getAttribute('category') || 'Uncategorized',
+          categories,
           description: doc.getAttribute('description') || '',
           thumbnail: doc.getAttribute('thumbnail') || '/images/default-thumbnail.png',
         };
-
       })
   );
 
@@ -65,25 +68,34 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
       toc: '',
       noheader: '',
       imagesdir: '/images',
+      sourcehighlighter: 'highlightjs',
+      highlightjsdir: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0',
+      highlightjsstyle: 'atom-one-dark',
+      'link-base-path': '/artikel/',
     },
     safe: 'unsafe',
   });
 
   const title = document.getDocumentTitle() || params.slug.replace(/-/g, ' ');
-  const category = document.getAttribute('category') || 'Uncategorized';
+  const categories = (document.getAttribute('categories') || 'Uncategorized')
+    .split(',')
+    .map((cat: string) => cat.trim());
   const description = document.getAttribute('description') || '';
 
-  // Get related articles (same category)
+  // Get related articles (any matching category)
   const relatedArticles = allArticles
     .filter(
       (article) =>
-        article.slug !== params.slug && article.category === category
+        article.slug !== params.slug &&
+        article.categories.some((cat: string) => categories.includes(cat))
     )
     .slice(0, 2);
 
   // Get all categories for sidebar
-  const categories = [
-    ...new Set(allArticles.map((article) => article.category)),
+  const allCategories = [
+    ...new Set(
+      allArticles.flatMap((article: { categories: string[] }) => article.categories)
+    ),
   ];
 
   // Extract all sections to manually create TOC
@@ -122,21 +134,23 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
     }
   }
 
-  contentHtml = contentHtml.replace(/href="([^"]+)\.html"/g, 'href="/artikel/$1"');
+  contentHtml = contentHtml
+    .replace(/href="([^"]+)\.html"/g, 'href="/artikel/$1"')
+    .replace(/href="([^"]+)\.adoc"/g, 'href="/artikel/$1"')
+    .replace(/href="\.\/([^"]+)"/g, 'href="/artikel/$1"');
 
   return {
     props: {
       html: contentHtml || '<p>Content not available</p>',
       toc: toc || '<p>TOC not available</p>',
       title,
-      category,
+      categories,
       description,
-      relatedArticles: relatedArticles.map(article => ({
+      relatedArticles: relatedArticles.map((article) => ({
         ...article,
         thumbnail: article.thumbnail || '/images/default-thumbnail.png',
       })),
-
-      categories,
+      allCategories,
     },
   };
 }
@@ -145,18 +159,18 @@ export default function ArtikelPage({
   html,
   toc,
   title,
-  category,
+  categories,
   description,
   relatedArticles,
-  categories,
+  allCategories,
 }: {
   html: string;
   toc: string;
   title: string;
-  category: string;
-  description: string;
-  relatedArticles: { slug: string; title: string; description: string; thumbnail: string }[]
   categories: string[];
+  description: string;
+  relatedArticles: { slug: string; title: string; description: string; thumbnail: string; categories: string[] }[];
+  allCategories: string[];
 }) {
   const router = useRouter();
   const { isSidebarOpen } = useSidebar();
@@ -164,9 +178,33 @@ export default function ArtikelPage({
 
   useEffect(() => {
     setShareUrl(window.location.href);
-    hljs.highlightAll();
 
-    // Add custom styling
+    const registerLanguages = async () => {
+      try {
+        const languages = {
+          go: (await import('highlight.js/lib/languages/go')).default,
+          javascript: (await import('highlight.js/lib/languages/javascript')).default,
+          python: (await import('highlight.js/lib/languages/python')).default,
+          java: (await import('highlight.js/lib/languages/java')).default,
+          cpp: (await import('highlight.js/lib/languages/cpp')).default,
+          bash: (await import('highlight.js/lib/languages/bash')).default,
+          sql: (await import('highlight.js/lib/languages/sql')).default,
+          xml: (await import('highlight.js/lib/languages/xml')).default,
+          yaml: (await import('highlight.js/lib/languages/yaml')).default,
+        };
+
+        Object.entries(languages).forEach(([lang, module]) => {
+          hljs.registerLanguage(lang, module);
+        });
+
+        hljs.highlightAll();
+      } catch (error) {
+        console.error('Error registering highlight.js languages:', error);
+      }
+    };
+
+    registerLanguages();
+
     const style = document.createElement('style');
     style.textContent = `
       .imageblock {
@@ -176,14 +214,14 @@ export default function ArtikelPage({
         display: flex;
         justify-content: center;
       }
-      .imageblock img {
+      .imageblock Image {
         max-width: 100%;
         height: auto;
         border-radius: 8px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s ease;
       }
-      .imageblock img:hover {
+      .imageblock Image:hover {
         transform: scale(1.02);
       }
       .imageblock.right {
@@ -206,6 +244,93 @@ export default function ArtikelPage({
         text-align: center;
         color: #9ca3af;
         margin-top: 0.5rem;
+      }
+      pre code.hljs {
+        display: block;
+        overflow-x: auto;
+        padding: 1.5em;
+        border-radius: 0.5rem;
+        background: #282c34;
+        color: #abb2bf;
+        font-family: 'Fira Code', 'Courier New', monospace;
+        line-height: 1.6;
+        tab-size: 4;
+        margin: 1.5rem 0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .hljs-comment,
+      .hljs-quote {
+        color: #5c6370;
+        font-style: italic;
+      }
+      .hljs-doctag,
+      .hljs-keyword,
+      .hljs-formula {
+        color: #c678dd;
+      }
+      .hljs-section,
+      .hljs-name,
+      .hljs-selector-tag,
+      .hljs-deletion,
+      .hljs-subst {
+        color: #e06c75;
+      }
+      .hljs-literal {
+        color: #56b6c2;
+      }
+      .hljs-string,
+      .hljs-regexp,
+      .hljs-addition,
+      .hljs-attribute,
+      .hljs-meta-string {
+        color: #98c379;
+      }
+      .hljs-built_in,
+      .hljs-class .hljs-title {
+        color: #e6c07b;
+      }
+      .hljs-attr,
+      .hljs-variable,
+      .hljs-template-variable,
+      .hljs-type,
+      .hljs-selector-class,
+      .hljs-selector-attr,
+      .hljs-selector-pseudo,
+      .hljs-number {
+        color: #d19a66;
+      }
+      .hljs-symbol,
+      .hljs-bullet,
+      .hljs-link,
+      .hljs-meta,
+      .hljs-selector-id,
+      .hljs-title {
+        color: #61aeee;
+      }
+      .hljs-emphasis {
+        font-style: italic;
+      }
+      .hljs-strong {
+        font-weight: bold;
+      }
+      .prose a {
+        color: #60a5fa;
+        text-decoration: underline;
+        transition: color 0.2s ease, background-color 0.2s ease;
+        border-radius: 3px;
+        padding: 0 2px;
+      }
+      .prose a:hover {
+        color: #93c5fd;
+        background-color: rgba(96, 165, 250, 0.1);
+        text-decoration: none;
+      }
+      .prose a:visited {
+        color: #a78bfa;
+      }
+      .prose a:focus {
+        outline: 2px solid #60a5fa;
+        outline-offset: 2px;
       }
       .related-articles {
         margin-top: 3rem;
@@ -244,8 +369,9 @@ export default function ArtikelPage({
         border-radius: 9999px;
         font-size: 0.875rem;
         font-weight: 500;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
       }
-      /* Right sidebar when collapsed */
       aside.w-16 {
         padding: 0.5rem;
       }
@@ -258,7 +384,6 @@ export default function ArtikelPage({
       aside.w-16:hover div {
         display: block;
       }
-      /* Responsive adjustments */
       @media (max-width: 1024px) {
         aside {
           display: none;
@@ -271,6 +396,10 @@ export default function ArtikelPage({
         main {
           margin-left: 0 !important;
           padding: 1rem;
+        }
+        pre code.hljs {
+          padding: 1rem;
+          font-size: 0.9rem;
         }
       }
     `;
@@ -290,14 +419,19 @@ export default function ArtikelPage({
       <Head>
         <title>{title} | RuangCodes</title>
         <meta name="description" content={description} />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap"
+          rel="stylesheet"
+        />
       </Head>
       <Header />
       <div className="flex bg-gray-900 min-h-screen pt-16">
-        <Sidebar categories={categories} currentCategory={category} />
-
-        {/* Main Content */}
-        <main className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-16'
-          } ${isSidebarOpen ? 'mr-64' : 'mr-16'}`}>
+        <Sidebar categories={allCategories} currentCategory={categories[0]} />
+        <main
+          className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${
+            isSidebarOpen ? 'ml-64' : 'ml-16'
+          } ${isSidebarOpen ? 'mr-64' : 'mr-16'}`}
+        >
           <header className="mb-8">
             <div className="flex flex-col space-y-4">
               <div className="flex items-center space-x-4">
@@ -321,12 +455,17 @@ export default function ArtikelPage({
                   </svg>
                   Kembali
                 </button>
-                <Link
-                  href={`/kategori/${category.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="category-badge hover:bg-gray-600 transition-colors"
-                >
-                  {category}
-                </Link>
+                <div className="flex flex-wrap gap-2">
+                  {categories.map((cat) => (
+                    <Link
+                      key={cat}
+                      href={`/kategori/${cat.toLowerCase().replace(/\s+/g, '-')}`}
+                      className="category-badge hover:bg-gray-600 transition-colors"
+                    >
+                      {cat}
+                    </Link>
+                  ))}
+                </div>
               </div>
               <h1 className="text-3xl font-bold text-gray-100">{title}</h1>
               {description && (
@@ -334,16 +473,19 @@ export default function ArtikelPage({
               )}
             </div>
           </header>
-
           <article
             className="prose prose-invert max-w-5xl mx-auto bg-gray-800 p-8 rounded-lg border border-gray-700"
             dangerouslySetInnerHTML={{ __html: html }}
           />
           <div className="max-w-5xl mx-auto mt-12">
-            <h2 className="text-xl font-semibold text-gray-200 mb-4">Bagikan Artikel Ini</h2>
+            <h2 className="text-xl font-semibold text-gray-200 mb-4">
+              Bagikan Artikel Ini
+            </h2>
             <div className="flex items-center gap-4">
               <a
-                href={`https://wa.me/?text=${encodeURIComponent(`${title} - ${shareUrl}`)}`}
+                href={`https://wa.me/?text=${encodeURIComponent(
+                  `${title} - ${shareUrl}`
+                )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-green-600 hover:bg-green-500 text-white p-3 rounded-full transition"
@@ -354,7 +496,9 @@ export default function ArtikelPage({
                 </svg>
               </a>
               <a
-                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(title)}`}
+                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                  shareUrl
+                )}&text=${encodeURIComponent(title)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-blue-500 hover:bg-blue-400 text-white p-3 rounded-full transition"
@@ -365,7 +509,9 @@ export default function ArtikelPage({
                 </svg>
               </a>
               <a
-                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                  shareUrl
+                )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-blue-700 hover:bg-blue-600 text-white p-3 rounded-full transition"
@@ -377,11 +523,10 @@ export default function ArtikelPage({
               </a>
             </div>
           </div>
-
           {relatedArticles.length > 0 && (
             <div className="related-articles max-w-5xl mx-auto">
               <h2 className="text-2xl font-semibold mb-6">
-                Artikel Terkait dalam {category}
+                Artikel Terkait
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-stretch related-articles-list">
                 {relatedArticles.map((article) => (
@@ -392,38 +537,45 @@ export default function ArtikelPage({
                   >
                     <div className="h-full flex flex-col p-6 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-all duration-200">
                       <div className="w-full aspect-[16/9] mb-4 overflow-hidden rounded-md bg-gray-700">
-                        <img
+                        <Image
                           src={article.thumbnail}
                           alt={article.title}
                           className="object-cover w-full h-full"
+                          width={640}
+                          height={360}
                         />
                       </div>
-                      <h3 className="text-xl font-semibold mb-2 line-clamp-2 text-justify">
+                      <h3 className="text-xl font-semibold mb-2 line-clamp-2">
                         {article.title}
                       </h3>
                       {article.description && (
-                        <p className="text-gray-400 line-clamp-3 flex-grow text-justify">
+                        <p className="text-gray-400 line-clamp-3 flex-grow">
                           {article.description}
                         </p>
                       )}
                       <div className="mt-4 pt-2 border-t border-gray-700">
-                        <span className="text-sm text-gray-400">Baca selengkapnya →</span>
+                        <span className="text-sm text-gray-400">
+                          Baca selengkapnya →
+                        </span>
                       </div>
                     </div>
                   </Link>
                 ))}
               </div>
-
             </div>
           )}
-
           <Footer />
         </main>
-
-        {/* Right Sidebar (Table of Contents) */}
-        <aside className={`bg-gray-800 p-4 border-l border-gray-700 fixed top-16 h-[calc(100vh-64px)] overflow-y-auto transition-all duration-300 ${isSidebarOpen ? 'w-64' : 'w-16'
-          } ${isSidebarOpen ? 'right-0' : 'right-0'}`}>
-          <h2 className={`text-lg font-semibold text-gray-100 mb-4 ${!isSidebarOpen && 'hidden'}`}>
+        <aside
+          className={`bg-gray-800 p-4 border-l border-gray-700 fixed top-16 h-[calc(100vh-64px)] overflow-y-auto transition-all duration-300 ${
+            isSidebarOpen ? 'w-64' : 'w-16'
+          } ${isSidebarOpen ? 'right-0' : 'right-0'}`}
+        >
+          <h2
+            className={`text-lg font-semibold text-gray-100 mb-4 ${
+              !isSidebarOpen && 'hidden'
+            }`}
+          >
             Daftar Isi
           </h2>
           <div

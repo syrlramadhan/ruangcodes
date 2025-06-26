@@ -1,0 +1,130 @@
+= Kontrol Alur: If, Switch, dan For
+:description: Mari belajar gimana caranya bikin program yang bisa ambil keputusan dan ngelakuin sesuatu berulang kali!
+:thumbnail: /images/go-dasar-overview.png
+:categories: Dasar pemrograman Go, Artikel
+:toc: left
+:date: 2025-06-22T01:31:00+07:00
+:link-base-path: /artikel/
+
+== Pengantar
+
+Nah, sekarang kita sudah kenal sama variabel dan tipe data, yuk kita lanjut ke hal seru lainnya: **Kontrol Alur**.
+
+Pernah mikir, "Kalau nilai ujian 90 ke atas, kasih A. Kalau nggak, ya B atau C." Nah, Go juga bisa berpikir seperti itu lewat `if`, `switch`, dan `for`!
+
+[.text-center]
+image::go-dasar-overview.png[Logo Golang, width=500]
+
+== If: Pengambilan Keputusan
+
+Kondisi `if` itu seperti bilang ke program: *"Coba cek ini, kalau benar, lakuin sesuatu."*
+
+[source,go]
+----
+nilai := 80
+
+if nilai >= 90 {
+    fmt.Println("Nilaimu A! Mantap!")
+} else if nilai >= 75 {
+    fmt.Println("Dapat B, lumayan~")
+} else {
+    fmt.Println("C, ayo semangat belajar lagi!")
+}
+----
+
+=== Short Statement di If
+
+Kadang kita pengen langsung siapin variabel di `if`. Bisa juga, kok!
+
+[source,go]
+----
+if umur := 20; umur >= 17 {
+    fmt.Println("Kamu sudah cukup umur.")
+}
+----
+
+== Switch: Lebih Rapi dari Banyak If
+
+Kalau kamu punya banyak `if` untuk satu variabel, lebih enak pakai `switch`.
+
+[source,go]
+----
+switch warna := "biru"; warna {
+case "merah":
+    fmt.Println("Berani!")
+case "biru":
+    fmt.Println("Tenang dan adem~")
+default:
+    fmt.Println("Warna apa tuh?")
+}
+----
+
+=== Perbandingan If vs Switch
+
+[openblock]
+*🧠 Kapan pakai apa?*
+
+* **Gunakan `if`** ketika kondisi yang dicek fleksibel atau kompleks (misal: `x > 10 && y < 5`)
+* **Gunakan `switch`** kalau kamu cuma ingin ngecek satu nilai dengan banyak kemungkinan.
+
+== For: Perulangan yang Seru
+
+Di Go, kita cuma punya satu jenis perulangan: `for`. Tapi bisa dipakai buat *semua* jenis loop.
+
+[source,go]
+----
+// Loop 5 kali
+for i := 1; i <= 5; i++ {
+    fmt.Println("Putaran ke", i)
+}
+----
+
+=== For tanpa Kondisi
+
+Kamu bahkan bisa bikin loop tak hingga! Tapi hati-hati jangan lupa `break`.
+
+[source,go]
+----
+for {
+    fmt.Println("Ini akan terus jalan...")
+    break
+}
+----
+
+=== For Range: Kelilingin Koleksi
+
+Kalau kamu punya list, array, atau map, `for range` akan sangat membantu!
+
+[source,go]
+----
+buah := []string{"apel", "pisang", "mangga"}
+
+for i, b := range buah {
+    fmt.Printf("Buah ke-%d: %s\n", i, b)
+}
+----
+
+=== Break dan Continue
+
+Kadang kita butuh **keluar dari loop** atau **lewatin iterasi tertentu**.
+
+[source,go]
+----
+for i := 1; i <= 5; i++ {
+    if i == 3 {
+        continue // loncati angka 3
+    }
+    fmt.Println(i)
+}
+----
+
+== Penutup
+
+Kamu sekarang sudah tahu cara bikin program yang bisa:
+
+* Ambil keputusan (`if`, `switch`)
+* Lakukan sesuatu berulang-ulang (`for`)
+
+Di part selanjutnya, kita bakal bahas cara membuat **fungsi (function)** biar kode kita makin rapi dan bisa digunakan ulang!
+
+xref:belajar-golang-part4.adoc[Uji Pemahaman Part 1 →]

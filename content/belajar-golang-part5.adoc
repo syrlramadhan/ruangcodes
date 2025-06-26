@@ -1,0 +1,181 @@
+= Belajar Fungsi di Go
+:description: Di bagian ini, kita akan belajar gimana caranya bikin dan manggil fungsi di Go — termasuk parameter, return value, sampai variadic dan anonymous function!
+:thumbnail: /images/go-dasar-overview.png
+:categories: Dasar pemrograman Go, Artikel
+:toc: left
+:date: 2025-06-24T01:31:00+07:00
+:link-base-path: /artikel/
+
+[.text-center]
+image::go-dasar-overview.png[Logo Golang, width=500]
+
+== Fungsi: Apa dan Kenapa?
+
+Fungsi (`function`) adalah blok kode yang bisa kita jalankan berkali-kali. Bayangkan kayak resep masakan — bisa dipakai berulang dan bisa dikasih bahan berbeda (parameter).
+
+== Cara Bikin Fungsi
+
+Di Go, fungsi dibuat dengan kata kunci `func`.
+
+[source,go]
+----
+func halo() {
+    fmt.Println("Halo dunia!")
+}
+----
+
+Lalu untuk manggil fungsi ini:
+
+[source,go]
+----
+halo()
+----
+
+== Parameter Fungsi
+
+Kadang kita butuh ngasih input ke fungsi. Nah, ini bisa lewat *parameter*.
+
+[source,go]
+----
+func sapa(nama string) {
+    fmt.Println("Halo", nama)
+}
+----
+
+Untuk memanggilnya:
+
+[source,go]
+----
+sapa("Syahrul")
+----
+
+== Return Value
+
+Fungsi bisa juga *ngembaliin nilai*. Kita pakai `return` untuk itu.
+
+[source,go]
+----
+func tambah(a int, b int) int {
+    return a + b
+}
+----
+
+Cara panggilnya:
+
+[source,go]
+----
+hasil := tambah(3, 4)
+fmt.Println(hasil) // Output: 7
+----
+
+== Multiple Return
+
+Go keren banget — satu fungsi bisa balikin lebih dari satu nilai.
+
+[source,go]
+----
+func bagiDanSisa(a, b int) (int, int) {
+    return a / b, a % b
+}
+----
+
+[source,go]
+----
+hasil, sisa := bagiDanSisa(10, 3)
+fmt.Println(hasil, sisa) // Output: 3 1
+----
+
+Kalau salah satunya nggak dipakai:
+
+[source,go]
+----
+_, sisa := bagiDanSisa(10, 3)
+----
+
+== Named Return
+
+Mau return value-nya dikasih nama? Bisa juga!
+
+[source,go]
+----
+func kelipatanDua(n int) (hasil int) {
+    hasil = n * 2
+    return
+}
+----
+
+== Fungsi Variadic
+
+Pengen ngasih banyak argumen kayak array tapi lebih fleksibel? Pakai variadic!
+
+[source,go]
+----
+func total(nilai ...int) int {
+    jumlah := 0
+    for _, v := range nilai {
+        jumlah += v
+    }
+    return jumlah
+}
+----
+
+[source,go]
+----
+fmt.Println(total(1, 2, 3, 4)) // Output: 10
+----
+
+== Fungsi sebagai Nilai
+
+Di Go, fungsi bisa disimpan sebagai nilai — keren, kan?
+
+[source,go]
+----
+var cetak = func(pesan string) {
+    fmt.Println(pesan)
+}
+cetak("Fungsi itu fleksibel!")
+----
+
+== Fungsi sebagai Parameter
+
+Kita bisa kirim fungsi ke fungsi lain. Contohnya:
+
+[source,go]
+----
+func sapaDenganFormat(format func(string) string, nama string) {
+    fmt.Println(format(nama))
+}
+
+func ucapanFormal(nama string) string {
+    return "Selamat datang, " + nama
+}
+
+sapaDenganFormat(ucapanFormal, "Syahrul")
+----
+
+== Fungsi Tanpa Nama (Anonymous Function)
+
+Kadang kita butuh fungsi cepat tanpa nama, misalnya:
+
+[source,go]
+----
+func() {
+    fmt.Println("Langsung jalan!")
+}()
+----
+
+Atau simpan ke variabel:
+
+[source,go]
+----
+halo := func(nama string) {
+    fmt.Println("Hai,", nama)
+}
+halo("RuangCodes")
+----
+
+== Penutup
+
+Fungsi di Go sangat fleksibel dan powerful. Di part berikutnya, kita akan bahas error handling — gimana cara menangani kesalahan dengan elegan!
+
+xref:belajar-golang-part6.adoc[Lanjut ke Error Handling →]
