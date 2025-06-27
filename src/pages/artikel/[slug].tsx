@@ -5,6 +5,7 @@ import Head from 'next/head';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import Footer from '@/components/Footer';
+import NavMobile from '@/components/NavMobile';
 import Link from 'next/link';
 import 'highlight.js/styles/atom-one-dark.css';
 import hljs from 'highlight.js';
@@ -173,7 +174,7 @@ export default function ArtikelPage({
   allCategories: string[];
 }) {
   const router = useRouter();
-  const { isSidebarOpen } = useSidebar();
+  const { isSidebarOpen, toggleSidebar } = useSidebar();
   const [shareUrl, setShareUrl] = useState('');
 
   useEffect(() => {
@@ -419,29 +420,39 @@ export default function ArtikelPage({
       <Head>
         <title>{title} | RuangCodes</title>
         <meta name="description" content={description} />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
       </Head>
+      
       <Header />
+      
       <div className="flex bg-gray-900 min-h-screen pt-16">
         <Sidebar categories={allCategories} currentCategory={categories[0]} />
+        
+        {/* Mobile Sidebar and Overlay */}
+        {isSidebarOpen && (
+          <>
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+              onClick={toggleSidebar}
+            />
+            <NavMobile categories={allCategories} currentCategory={categories[0]} />
+          </>
+        )}
+        
         <main
-          className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${
-            isSidebarOpen ? 'ml-64' : 'ml-16'
-          } ${isSidebarOpen ? 'mr-64' : 'mr-16'}`}
+          className={`flex-1 p-4 md:p-8 font-mono text-gray-100 transition-all duration-300 ${
+            isSidebarOpen ? 'ml-0 md:ml-64' : 'ml-0 md:ml-16'
+          }`}
         >
-          <header className="mb-8">
-            <div className="flex flex-col space-y-4">
-              <div className="flex items-center space-x-4">
+          <header className="mb-6 md:mb-8">
+            <div className="flex flex-col space-y-3 md:space-y-4">
+              <div className="flex flex-col space-y-3 md:flex-row md:items-center md:space-y-0 md:space-x-4">
                 <button
                   onClick={handleGoBack}
-                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors duration-200 text-sm font-semibold"
+                  className="flex items-center px-3 py-1.5 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors duration-200 text-xs md:text-sm font-semibold self-start"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 mr-2"
+                    className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -455,30 +466,34 @@ export default function ArtikelPage({
                   </svg>
                   Kembali
                 </button>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1 md:gap-2">
                   {categories.map((cat) => (
                     <Link
                       key={cat}
                       href={`/kategori/${cat.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="category-badge hover:bg-gray-600 transition-colors"
+                      className="inline-block px-2 py-0.5 md:px-3 md:py-1 text-xs bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"
                     >
                       {cat}
                     </Link>
                   ))}
                 </div>
               </div>
-              <h1 className="text-3xl font-bold text-gray-100">{title}</h1>
+              <h1 className="text-xl md:text-3xl font-bold text-gray-100">{title}</h1>
               {description && (
-                <p className="text-gray-400 text-lg">{description}</p>
+                <p className="text-sm md:text-lg text-gray-400">{description}</p>
               )}
             </div>
           </header>
+
+          {/* Article Content */}
           <article
-            className="prose prose-invert max-w-5xl mx-auto bg-gray-800 p-8 rounded-lg border border-gray-700"
+            className="prose prose-invert max-w-5xl mx-auto bg-gray-800 p-4 md:p-8 rounded-lg border border-gray-700"
             dangerouslySetInnerHTML={{ __html: html }}
           />
-          <div className="max-w-5xl mx-auto mt-12">
-            <h2 className="text-xl font-semibold text-gray-200 mb-4">
+
+          {/* Share Buttons */}
+          <div className="max-w-5xl mx-auto mt-6 md:mt-12">
+            <h2 className="text-lg md:text-xl font-semibold text-gray-200 mb-3 md:mb-4">
               Bagikan Artikel Ini
             </h2>
             <div className="flex items-center gap-4">
@@ -523,20 +538,21 @@ export default function ArtikelPage({
               </a>
             </div>
           </div>
+          {/* Related Articles - Optimized for mobile */}
           {relatedArticles.length > 0 && (
-            <div className="related-articles max-w-5xl mx-auto">
-              <h2 className="text-2xl font-semibold mb-6">
+            <div className="related-articles max-w-5xl mx-auto mt-6 md:mt-12">
+              <h2 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6">
                 Artikel Terkait
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-stretch related-articles-list">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
                 {relatedArticles.map((article) => (
                   <Link
                     key={article.slug}
                     href={`/artikel/${article.slug}`}
                     passHref
                   >
-                    <div className="h-full flex flex-col p-6 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-all duration-200">
-                      <div className="w-full aspect-[16/9] mb-4 overflow-hidden rounded-md bg-gray-700">
+                    <div className="h-full flex flex-col p-3 md:p-4 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-all duration-200">
+                      <div className="w-full aspect-[16/9] mb-2 md:mb-3 overflow-hidden rounded-md bg-gray-700">
                         <Image
                           src={article.thumbnail}
                           alt={article.title}
@@ -545,16 +561,16 @@ export default function ArtikelPage({
                           height={360}
                         />
                       </div>
-                      <h3 className="text-xl font-semibold mb-2 line-clamp-2">
+                      <h3 className="text-sm md:text-base font-semibold mb-1 md:mb-2 line-clamp-2">
                         {article.title}
                       </h3>
                       {article.description && (
-                        <p className="text-gray-400 line-clamp-3 flex-grow">
+                        <p className="text-xs md:text-sm text-gray-400 line-clamp-2 md:line-clamp-3 flex-grow">
                           {article.description}
                         </p>
                       )}
-                      <div className="mt-4 pt-2 border-t border-gray-700">
-                        <span className="text-sm text-gray-400">
+                      <div className="mt-2 md:mt-3 pt-2 border-t border-gray-700">
+                        <span className="text-xs text-gray-400">
                           Baca selengkapnya →
                         </span>
                       </div>
@@ -566,8 +582,10 @@ export default function ArtikelPage({
           )}
           <Footer />
         </main>
+        
+        {/* TOC Sidebar - Hidden on mobile */}
         <aside
-          className={`bg-gray-800 p-4 border-l border-gray-700 fixed top-16 h-[calc(100vh-64px)] overflow-y-auto transition-all duration-300 ${
+          className={`hidden md:block bg-gray-800 p-4 border-l border-gray-700 fixed top-16 h-[calc(100vh-64px)] overflow-y-auto transition-all duration-300 ${
             isSidebarOpen ? 'w-64' : 'w-16'
           } ${isSidebarOpen ? 'right-0' : 'right-0'}`}
         >

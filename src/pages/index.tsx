@@ -5,6 +5,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
+import NavMobile from '@/components/NavMobile';
 import Footer from '@/components/Footer';
 import { useState } from 'react';
 import { Search, ArrowRight } from 'lucide-react';
@@ -70,13 +71,13 @@ export default function Home({
   categories: string[];
 }) {
   const [searchQuery, setSearchQuery] = useState('');
-  const { isSidebarOpen } = useSidebar();
+  const { isSidebarOpen, toggleSidebar } = useSidebar();
 
   const filteredArticles = articles
     .filter((article) =>
       article.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    .slice(0, 6); // Batasi ke 6 artikel terbaru
+    .slice(0, 6);
 
   return (
     <>
@@ -87,35 +88,49 @@ export default function Home({
           content="Panduan dan tutorial teknologi modern"
         />
       </Head>
+      
       <Header />
+      
       <div className="flex bg-gray-900 min-h-screen pt-16">
         <Sidebar categories={categories} />
+        
+        {/* Mobile Sidebar and Overlay */}
+        {isSidebarOpen && (
+          <>
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+              onClick={toggleSidebar}
+            />
+            <NavMobile categories={categories} />
+          </>
+        )}
+        
         <main
-          className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${
-            isSidebarOpen ? 'ml-64' : 'ml-16'
+          className={`flex-1 p-4 md:p-8 font-mono text-gray-100 transition-all duration-300 ${
+            isSidebarOpen ? 'ml-0 md:ml-64' : 'ml-0 md:ml-16'
           }`}
         >
-          <h1 className="text-4xl font-bold mb-2">
+          <h1 className="text-2xl md:text-4xl font-bold mb-2">
             📚 Artikel Terbaru RuangCodes
           </h1>
-          <p className="text-lg text-gray-400 mb-8">
+          <p className="text-base md:text-lg text-gray-400 mb-4 md:mb-8">
             Panduan, tutorial, dan dokumentasi dari RuangCodes.
           </p>
-          <div className="relative mb-8">
+          <div className="relative mb-4 md:mb-8">
             <input
               type="text"
               placeholder="Cari artikel..."
-              className="w-full p-3 pl-10 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 md:p-3 pl-8 md:pl-10 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <Search className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-2 md:left-3 top-2.5 md:top-3.5 h-4 w-4 md:h-5 md:w-5 text-gray-400" />
           </div>
-          <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <section className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
             {filteredArticles.map(({ slug, title, thumbnail, categories }) => (
               <Link key={slug} href={`/artikel/${slug}`} passHref>
-                <div className="h-full flex flex-col p-6 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-all duration-200 cursor-pointer">
-                  <div className="w-full aspect-[16/9] mb-4 overflow-hidden rounded-md bg-gray-700">
+                <div className="h-full flex flex-col p-3 md:p-6 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-all duration-200 cursor-pointer">
+                  <div className="w-full aspect-[16/9] mb-2 md:mb-4 overflow-hidden rounded-md bg-gray-700">
                     <Image
                       src={thumbnail}
                       alt={title}
@@ -124,14 +139,14 @@ export default function Home({
                       height={360}
                     />
                   </div>
-                  <h2 className="text-xl font-semibold mb-2 line-clamp-2">
+                  <h2 className="text-sm md:text-xl font-semibold mb-1 md:mb-2 line-clamp-2">
                     {title}
                   </h2>
-                  <div className="mt-auto pt-4 flex flex-wrap gap-2">
+                  <div className="mt-auto pt-2 md:pt-4 flex flex-wrap gap-1 md:gap-2">
                     {categories.map((cat) => (
                       <span
                         key={cat}
-                        className="inline-block px-3 py-1 text-xs bg-gray-700 rounded-full text-gray-300"
+                        className="inline-block px-2 py-0.5 md:px-3 md:py-1 text-xs bg-gray-700 rounded-full text-gray-300"
                       >
                         {cat}
                       </span>
@@ -141,11 +156,11 @@ export default function Home({
               </Link>
             ))}
           </section>
-          <div className="mt-12 text-center">
+          <div className="mt-6 md:mt-12 text-center">
             <Link href="/kategori/artikel" passHref>
-              <button className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors duration-200 text-sm font-semibold mx-auto">
+              <button className="flex items-center px-4 py-2 md:px-6 md:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors duration-200 text-xs md:text-sm font-semibold mx-auto">
                 Artikel Lainnya
-                <ArrowRight className="h-4 w-4 ml-2" />
+                <ArrowRight className="h-3 w-3 md:h-4 md:w-4 ml-1 md:ml-2" />
               </button>
             </Link>
           </div>

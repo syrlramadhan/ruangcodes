@@ -14,7 +14,7 @@ import {
   Terminal,
   X,
 } from 'lucide-react';
-import { JSX, useState, useEffect } from 'react';
+import { JSX } from 'react';
 import { useSidebar } from './SidebarContext';
 
 interface SidebarProps {
@@ -38,28 +38,19 @@ export default function Sidebar({
   categories = [],
   currentCategory,
 }: SidebarProps) {
-  const [isMobile, setIsMobile] = useState(false);
-  const { isSidebarOpen, toggleSidebar } = useSidebar();
+  const { isSidebarOpen, toggleSidebar, isMobile } = useSidebar();
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth >= 768) {
-        // Pindahkan logika ini ke SidebarProvider jika perlu
-      }
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  // Don't render sidebar at all on mobile when closed
+  if (isMobile && !isSidebarOpen) {
+    return null;
+  }
 
   return (
     <>
       <aside
         className={`bg-gray-800 border-r border-gray-700 fixed top-16 h-[calc(100vh-64px)] overflow-y-auto transition-all duration-300 z-40 ${
           isSidebarOpen ? 'w-64' : 'w-16'
-        }`}
+        } ${isMobile ? 'left-0' : 'left-0'}`}
       >
         <button
           onClick={toggleSidebar}
