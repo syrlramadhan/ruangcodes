@@ -420,39 +420,39 @@ export default function ArtikelPage({
       <Head>
         <title>{title} | RuangCodes</title>
         <meta name="description" content={description} />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap"
+          rel="stylesheet"
+        />
       </Head>
-      
       <Header />
-      
       <div className="flex bg-gray-900 min-h-screen pt-16">
         <Sidebar categories={allCategories} currentCategory={categories[0]} />
-        
         {/* Mobile Sidebar and Overlay */}
         {isSidebarOpen && (
           <>
             <div
-              className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+              className="mobile-overlay"
               onClick={toggleSidebar}
             />
             <NavMobile categories={allCategories} currentCategory={categories[0]} />
           </>
         )}
-        
         <main
-          className={`flex-1 p-4 md:p-8 font-mono text-gray-100 transition-all duration-300 ${
-            isSidebarOpen ? 'ml-0 md:ml-64' : 'ml-0 md:ml-16'
-          }`}
+          className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${
+            isSidebarOpen ? 'ml-64' : 'ml-16'
+          } ${isSidebarOpen ? 'mr-64' : 'mr-16'}`}
         >
-          <header className="mb-6 md:mb-8">
-            <div className="flex flex-col space-y-3 md:space-y-4">
-              <div className="flex flex-col space-y-3 md:flex-row md:items-center md:space-y-0 md:space-x-4">
+          <header className="mb-8">
+            <div className="flex flex-col space-y-4">
+              <div className="flex items-center space-x-4">
                 <button
                   onClick={handleGoBack}
-                  className="flex items-center px-3 py-1.5 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors duration-200 text-xs md:text-sm font-semibold self-start"
+                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors duration-200 text-sm font-semibold"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2"
+                    className="h-4 w-4 mr-2"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -466,34 +466,30 @@ export default function ArtikelPage({
                   </svg>
                   Kembali
                 </button>
-                <div className="flex flex-wrap gap-1 md:gap-2">
+                <div className="flex flex-wrap gap-2">
                   {categories.map((cat) => (
                     <Link
                       key={cat}
                       href={`/kategori/${cat.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="inline-block px-2 py-0.5 md:px-3 md:py-1 text-xs bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"
+                      className="category-badge hover:bg-gray-600 transition-colors"
                     >
                       {cat}
                     </Link>
                   ))}
                 </div>
               </div>
-              <h1 className="text-xl md:text-3xl font-bold text-gray-100">{title}</h1>
+              <h1 className="text-3xl font-bold text-gray-100">{title}</h1>
               {description && (
-                <p className="text-sm md:text-lg text-gray-400">{description}</p>
+                <p className="text-gray-400 text-lg">{description}</p>
               )}
             </div>
           </header>
-
-          {/* Article Content */}
           <article
-            className="prose prose-invert max-w-5xl mx-auto bg-gray-800 p-4 md:p-8 rounded-lg border border-gray-700"
+            className="prose prose-invert max-w-5xl mx-auto bg-gray-800 p-8 rounded-lg border border-gray-700"
             dangerouslySetInnerHTML={{ __html: html }}
           />
-
-          {/* Share Buttons */}
-          <div className="max-w-5xl mx-auto mt-6 md:mt-12">
-            <h2 className="text-lg md:text-xl font-semibold text-gray-200 mb-3 md:mb-4">
+          <div className="max-w-5xl mx-auto mt-12">
+            <h2 className="text-xl font-semibold text-gray-200 mb-4">
               Bagikan Artikel Ini
             </h2>
             <div className="flex items-center gap-4">
@@ -538,7 +534,7 @@ export default function ArtikelPage({
               </a>
             </div>
           </div>
-          {/* Related Articles - Optimized for mobile */}
+          {/* Related Articles - Now shows 3 on desktop */}
           {relatedArticles.length > 0 && (
             <div className="related-articles max-w-5xl mx-auto mt-6 md:mt-12">
               <h2 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6">

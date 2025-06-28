@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useSidebar } from './SidebarContext';
 
 export default function Header() {
-  const { toggleSidebar, isSidebarOpen } = useSidebar();
+  const { toggleSidebar } = useSidebar();
 
   return (
     <>
