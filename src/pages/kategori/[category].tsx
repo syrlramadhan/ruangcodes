@@ -147,8 +147,11 @@ export default function CategoryPage({
       </Head>
       <Header />
       <div className="flex bg-gray-900 min-h-screen pt-16">
-        <Sidebar categories={categories} currentCategory={category} />
-        
+        {/* Desktop Sidebar - Always visible on desktop */}
+        <div className="hidden md:block">
+          <Sidebar categories={categories} currentCategory={category} />
+        </div>
+
         {/* Mobile Sidebar and Overlay */}
         {isSidebarOpen && (
           <>

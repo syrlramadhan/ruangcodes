@@ -427,7 +427,11 @@ export default function ArtikelPage({
       </Head>
       <Header />
       <div className="flex bg-gray-900 min-h-screen pt-16">
-        <Sidebar categories={allCategories} currentCategory={categories[0]} />
+        {/* Desktop Sidebar - Always visible on desktop */}
+        <div className="hidden md:block">
+          <Sidebar categories={allCategories} currentCategory={categories[0]} />
+        </div>
+
         {/* Mobile Sidebar and Overlay */}
         {isSidebarOpen && (
           <>
