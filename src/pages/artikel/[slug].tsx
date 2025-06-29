@@ -150,6 +150,7 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
       relatedArticles: relatedArticles.map((article) => ({
         ...article,
         thumbnail: article.thumbnail || '/images/default-thumbnail.png',
+        slug: article.slug,
       })),
       allCategories,
     },
@@ -164,6 +165,8 @@ export default function ArtikelPage({
   description,
   relatedArticles,
   allCategories,
+  thumbnail,
+  slug,
 }: {
   html: string;
   toc: string;
@@ -172,6 +175,8 @@ export default function ArtikelPage({
   description: string;
   relatedArticles: { slug: string; title: string; description: string; thumbnail: string; categories: string[] }[];
   allCategories: string[];
+  thumbnail: string;
+  slug: string;
 }) {
   const router = useRouter();
   const { isSidebarOpen, toggleSidebar } = useSidebar();
@@ -420,6 +425,22 @@ export default function ArtikelPage({
       <Head>
         <title>{title} | RuangCodes</title>
         <meta name="description" content={description} />
+        {/* Open Graph / WhatsApp / Facebook / LinkedIn */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={`${title} | RuangCodes`} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={`https://ruangcodes.vercel.app/artikel/${slug}`} />
+        <meta property="og:image" content={`https://ruangcodes.vercel.app${thumbnail}`} />
+        <meta property="og:image:secure_url" content={`https://ruangcodes.vercel.app${thumbnail}`} />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${title} | RuangCodes`} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={`https://ruangcodes.vercel.app${thumbnail}`} />
+
+        {/* Fallback untuk platform yang baca <meta name="image"> */}
+        <meta name="image" content={`https://ruangcodes.vercel.app${thumbnail}`} />
         <link
           href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap"
           rel="stylesheet"
@@ -443,9 +464,8 @@ export default function ArtikelPage({
           </>
         )}
         <main
-          className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${
-            isSidebarOpen ? 'ml-64' : 'ml-16'
-          } ${isSidebarOpen ? 'mr-64' : 'mr-16'}`}
+          className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-16'
+            } ${isSidebarOpen ? 'mr-64' : 'mr-16'}`}
         >
           <header className="mb-8">
             <div className="flex flex-col space-y-4">
@@ -582,17 +602,15 @@ export default function ArtikelPage({
           )}
           <Footer />
         </main>
-        
+
         {/* TOC Sidebar - Hidden on mobile */}
         <aside
-          className={`hidden md:block bg-gray-800 p-4 border-l border-gray-700 fixed top-16 h-[calc(100vh-64px)] overflow-y-auto transition-all duration-300 ${
-            isSidebarOpen ? 'w-64' : 'w-16'
-          } ${isSidebarOpen ? 'right-0' : 'right-0'}`}
+          className={`hidden md:block bg-gray-800 p-4 border-l border-gray-700 fixed top-16 h-[calc(100vh-64px)] overflow-y-auto transition-all duration-300 ${isSidebarOpen ? 'w-64' : 'w-16'
+            } ${isSidebarOpen ? 'right-0' : 'right-0'}`}
         >
           <h2
-            className={`text-lg font-semibold text-gray-100 mb-4 ${
-              !isSidebarOpen && 'hidden'
-            }`}
+            className={`text-lg font-semibold text-gray-100 mb-4 ${!isSidebarOpen && 'hidden'
+              }`}
           >
             Daftar Isi
           </h2>
