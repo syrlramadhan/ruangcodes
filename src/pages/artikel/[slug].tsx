@@ -430,8 +430,8 @@ export default function ArtikelPage({
         <meta property="og:title" content={`${title} | RuangCodes`} />
         <meta property="og:description" content={description} />
         <meta property="og:url" content={`https://ruangcodes.vercel.app/artikel/${slug}`} />
-        <meta property="og:image" content={`https://ruangcodes.vercel.app${thumbnail}`} />
-        <meta property="og:image:secure_url" content={`https://ruangcodes.vercel.app${thumbnail}`} />
+        <meta property="og:image" content={`https://ruangcodes.vercel.app/artikel/${thumbnail}`} />
+        <meta property="og:image:secure_url" content={`https://ruangcodes.vercel.app/artikel/${thumbnail}`} />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
