@@ -79,10 +79,14 @@ export async function getStaticProps({
       })
   );
 
-  // Filter out null values and sort by date (newest first)
   const filteredArticles = articles
-    .filter((article) => article !== null)
-    .sort((b, a) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  .filter((article) => article !== null)
+  .sort((a, b) => {
+    if (params.category === 'artikel') {
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    }
+    return new Date(a.date).getTime() - new Date(b.date).getTime();
+  });
 
   // Get all categories for sidebar
   const allCategories = new Set<string>();
