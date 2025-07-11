@@ -165,7 +165,6 @@ export default function ArtikelPage({
   description,
   relatedArticles,
   allCategories,
-  thumbnail,
   slug,
 }: {
   html: string;
