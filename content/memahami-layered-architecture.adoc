@@ -1,0 +1,316 @@
+= Memahami Layered Architecture: Konsep, Struktur, dan Implementasi
+:description: Penjelasan menyeluruh tentang layered architecture dalam pengembangan perangkat lunak — mulai dari konsep, struktur folder, implementasi di Golang, hingga perbandingannya dengan MVC.
+:thumbnail: /images/layered-architecture.png
+:categories: Artikel
+:toc: left
+:date: 2025-08-05T15:00:00+08:00
+:link-base-path: /artikel/
+
+== Pendahuluan
+
+Layered architecture atau arsitektur berlapis adalah salah satu pendekatan desain perangkat lunak yang sangat populer karena kesederhanaannya dan kemampuannya untuk memisahkan tanggung jawab antar bagian sistem.
+
+Arsitektur ini tidak hanya digunakan dalam API, tetapi juga dalam berbagai jenis aplikasi — mulai dari aplikasi web, desktop, hingga CLI.
+
+[.text-center]
+image::layered-architecture.png[Layered Architecture, width=500]
+
+== Apa itu Layered Architecture?
+
+Layered architecture adalah pendekatan desain di mana aplikasi dibagi menjadi beberapa lapisan (layer), dan setiap lapisan memiliki tanggung jawab spesifik. Lapisan-lapisan ini biasanya berkomunikasi satu arah — dari lapisan atas ke bawah.
+
+[cols="1,3"]
+|===
+| 🎯 Tujuan | Memisahkan tanggung jawab agar kode lebih terstruktur, mudah diuji, dikembangkan, dan dipelihara.
+| 🧠 Prinsip dasar | Tiap layer hanya tahu tentang layer di bawah atau di atasnya, bukan semua layer sekaligus.
+|===
+
+=== Kenapa Layered Architecture Umum di API?
+
+Layered architecture sangat populer di dunia pengembangan *backend* dan *RESTful API* karena sifatnya yang:
+
+[horizontal]
+- 🔄 Terstruktur: Setiap permintaan (request) dapat diproses melalui urutan layer yang jelas: Controller → Service → Repository
+- 🔍 Terpisah: Logika bisnis tidak tercampur dengan logika database maupun logika presentasi (response)
+- ✅ Mudah diuji: Setiap layer bisa diuji secara mandiri (unit test)
+- 🔄 Reusable: Service atau repository dapat digunakan ulang oleh controller lain atau service lain
+
+== Contoh Alur Request pada API
+
+[.text-center]
+image::api-flow.png[Ilustrasi Alur Request API, width=500]
+
+Alur umum saat client melakukan permintaan ke server menggunakan arsitektur layered:
+
+[vertical]
+*🌐* **Client**  
+(misal: Postman, aplikasi frontend, atau mobile app)
+
+↓
+
+*📡* **HTTP Request ke endpoint**  
+contoh: `POST /users`
+
+↓
+
+*🧭* **Controller**  
+Menerima request, memvalidasi input, dan meneruskannya ke service
+
+↓
+
+*🧠* **Service**  
+Menjalankan logika bisnis, misalnya validasi lanjutan atau transformasi data
+
+↓
+
+*💾* **Repository**  
+Berinteraksi langsung dengan database untuk menyimpan, mengambil, atau mengubah data
+
+↓
+
+*📨* **Response**  
+Hasil akhir dikirim kembali ke client, bisa berupa data atau pesan status
+
+== Ilustrasi Ringkas
+
+[cols="1,2"]
+|===
+| Ikon | Peran
+
+| 🌐 | Client: Pengguna yang mengirim request
+| 📡 | Endpoint/API: Titik masuk komunikasi HTTP
+| 🧭 | Controller: Penjaga pintu logika awal
+| 🧠 | Service: Otak dari logika bisnis
+| 💾 | Repository: Tempat penyimpanan data
+| 📨 | Response: Balasan dari server
+|===
+
+
+Karena API berfungsi sebagai *interface* antara frontend dan backend, penting sekali untuk menjaga keterpisahan fungsi dan tanggung jawab. Layered architecture membuat ini lebih mudah dikelola, terutama ketika aplikasi tumbuh dan kompleksitas meningkat.
+
+Selain itu, framework modern seperti Spring Boot (Java), ASP.NET Core (C#), Express.js (Node.js), dan Gin atau Echo (Golang) mendukung gaya pemrograman berlapis ini secara alami.
+
+== Struktur Layered Architecture
+
+Struktur umum dari layered architecture untuk aplikasi backend, khususnya API:
+
+[vertical]
+* **Controller** → Menerima permintaan dari client dan meneruskannya ke service
+* **Service** → Menangani logika bisnis
+* **Repository** → Mengakses data dari database atau sumber eksternal
+* **Model** → Struktur data atau entitas
+* **Config** → Konfigurasi sistem seperti database, environment, dll
+
+Contoh hierarki alur data:
+
+Client → Controller → Service → Repository → Database
+
+
+== Contoh Implementasi di Golang
+
+Berikut struktur folder proyek sederhana menggunakan layered architecture:
+
+[source,text]
+----
+project-name/
+├── config/
+├── model/
+├── dto/
+├── repository/
+├── service/
+├── controller/
+└── main.go
+----
+
+=== 1. Model
+
+[source,go]
+----
+// model/user.go
+package model
+
+type User struct {
+    ID    int64
+    Name  string
+    Email string
+}
+----
+
+=== 2. DTO (Data Transfer Object)
+
+[source,go]
+----
+// dto/user_dto.go
+package dto
+
+type CreateUserRequest struct {
+    Name  string `json:"name"`
+    Email string `json:"email"`
+}
+
+type UserResponse struct {
+    ID    int64  `json:"id"`
+    Name  string `json:"name"`
+    Email string `json:"email"`
+}
+----
+
+=== 3. Repository
+
+[source,go]
+----
+// repository/user_repository.go
+package repository
+
+import "project-name/model"
+
+type UserRepository interface {
+    Save(user *model.User) (*model.User, error)
+    FindAll() ([]model.User, error)
+}
+----
+
+=== 4. Service
+
+[source,go]
+----
+// service/user_service.go
+package service
+
+import (
+    "project-name/dto"
+    "project-name/model"
+    "project-name/repository"
+)
+
+type UserService interface {
+    CreateUser(dto.CreateUserRequest) (*dto.UserResponse, error)
+    GetAllUsers() ([]dto.UserResponse, error)
+}
+
+type userService struct {
+    repo repository.UserRepository
+}
+
+func NewUserService(repo repository.UserRepository) UserService {
+    return &userService{repo: repo}
+}
+
+func (s *userService) CreateUser(req dto.CreateUserRequest) (*dto.UserResponse, error) {
+    user := model.User{Name: req.Name, Email: req.Email}
+    savedUser, err := s.repo.Save(&user)
+    if err != nil {
+        return nil, err
+    }
+    return &dto.UserResponse{ID: savedUser.ID, Name: savedUser.Name, Email: savedUser.Email}, nil
+}
+
+func (s *userService) GetAllUsers() ([]dto.UserResponse, error) {
+    users, err := s.repo.FindAll()
+    if err != nil {
+        return nil, err
+    }
+    var result []dto.UserResponse
+    for _, u := range users {
+        result = append(result, dto.UserResponse{ID: u.ID, Name: u.Name, Email: u.Email})
+    }
+    return result, nil
+}
+----
+
+=== 5. Controller
+
+[source,go]
+----
+// controller/user_controller.go
+package controller
+
+import (
+    "encoding/json"
+    "net/http"
+    "project-name/dto"
+    "project-name/service"
+)
+
+type UserController struct {
+    userService service.UserService
+}
+
+func NewUserController(us service.UserService) *UserController {
+    return &UserController{userService: us}
+}
+
+func (c *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
+    var req dto.CreateUserRequest
+    _ = json.NewDecoder(r.Body).Decode(&req)
+    user, err := c.userService.CreateUser(req)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(user)
+}
+----
+
+=== 6. Main
+
+[source,go]
+----
+// main.go
+package main
+
+import (
+    "net/http"
+    "project-name/controller"
+    "project-name/repository"
+    "project-name/service"
+)
+
+func main() {
+    repo := repository.NewUserRepositoryMemory() // implementasi dummy
+    srv := service.NewUserService(repo)
+    ctrl := controller.NewUserController(srv)
+
+    http.HandleFunc("/users", ctrl.CreateUser)
+    http.ListenAndServe(":8080", nil)
+}
+----
+
+== Perbedaan Layered Architecture dan MVC
+
+[cols="1,2,2", options="header"]
+|===
+| Aspek
+| Layered Architecture
+| MVC
+
+| Fokus
+| Memisahkan logika berdasarkan tanggung jawab seperti service, repository, dan controller
+| Memisahkan tampilan (*View*), logika kontrol (*Controller*), dan data (*Model*)
+
+| Skema Umum
+| Controller → Service → Repository → Database
+| View ↔ Controller ↔ Model
+
+| Cocok Untuk
+| Backend API, sistem layanan (*service*), CLI
+| Aplikasi web atau desktop yang berfokus pada antarmuka pengguna
+
+| Arsitektur
+| Umum digunakan di banyak jenis sistem, lebih fleksibel dan dapat diperluas menjadi microservice
+| Biasanya digunakan dalam aplikasi UI yang butuh interaksi langsung dengan pengguna
+|===
+
+== Kesimpulan
+
+Layered architecture adalah salah satu pola desain paling praktis dan fleksibel yang memisahkan aplikasi berdasarkan tanggung jawabnya. Pola ini sangat cocok untuk membuat kode lebih modular, teruji, dan mudah dikembangkan — baik itu API, desktop, mobile, maupun CLI.
+
+Jika dipahami dengan baik, kamu bisa menggabungkan layered architecture dengan pola lain seperti MVC, Clean Architecture, atau bahkan Hexagonal Architecture untuk aplikasi skala besar.
+
+== Referensi
+
+* Martin Fowler – *Patterns of Enterprise Application Architecture*
+* Robert C. Martin – *Clean Architecture*
+* Dokumentasi resmi GoLang dan berbagai open source project
+* Artikel dan praktik arsitektur modern dari komunitas backend
