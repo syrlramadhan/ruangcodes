@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import {
   Home,
-  Info,
   ChevronLeft,
   ChevronRight,
   Menu,

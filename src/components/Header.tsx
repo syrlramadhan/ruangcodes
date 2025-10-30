@@ -1,7 +1,6 @@
 // components/Header.tsx
 import Link from 'next/link';
 import { Menu, Github, Instagram, Facebook } from 'lucide-react';
-import Image from 'next/image';
 import { useSidebar } from './SidebarContext';
 
 export default function Header() {

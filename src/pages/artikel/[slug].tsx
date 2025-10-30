@@ -440,10 +440,6 @@ export default function ArtikelPage({
 
         {/* Fallback untuk platform yang baca <meta name="image"> */}
         <meta name="image" content={`https://ruang.syahrulramadhan.site/images/${slug}.png`} />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
       </Head>
       <Header />
       <div className="flex bg-gray-900 min-h-screen pt-16">

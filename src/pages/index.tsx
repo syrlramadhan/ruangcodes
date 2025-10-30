@@ -85,7 +85,6 @@ export default function Home({
     .slice(0, 9);
 
   const featuredArticles = articles.slice(0, 3);
-  const recentArticles = articles.slice(0, 6);
 
   return (
     <>
@@ -152,7 +151,7 @@ export default function Home({
                 Artikel Unggulan
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {featuredArticles.map((article, index) => (
+                {featuredArticles.map((article) => (
                   <Link key={article.slug} href={`/artikel/${article.slug}`} passHref>
                     <div className="group bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-blue-500 transition-all duration-300 hover:transform hover:-translate-y-2 cursor-pointer">
                       <div className="w-full aspect-video mb-4 overflow-hidden rounded-xl bg-gradient-to-br from-blue-500 to-purple-600">
@@ -199,7 +198,7 @@ export default function Home({
             {filteredArticles.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-gray-400 text-lg mb-4">
-                  Tidak ada artikel yang ditemukan untuk "{searchQuery}"
+                  Tidak ada artikel yang ditemukan untuk &quot;{searchQuery}&quot;
                 </div>
                 <button 
                   onClick={() => setSearchQuery('')}
