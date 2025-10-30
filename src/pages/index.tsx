@@ -1,3 +1,4 @@
+// pages/index.tsx (Homepage yang sudah dimodifikasi)
 import fs from 'fs';
 import path from 'path';
 import Asciidoctor from 'asciidoctor';
@@ -8,7 +9,7 @@ import Sidebar from '@/components/Sidebar';
 import NavMobile from '@/components/NavMobile';
 import Footer from '@/components/Footer';
 import { useState } from 'react';
-import { Search, ArrowRight } from 'lucide-react';
+import { Search, ArrowRight, BookOpen, Code, Database, Server } from 'lucide-react';
 import { useSidebar } from '@/components/SidebarContext';
 import Image from 'next/image';
 
@@ -33,6 +34,7 @@ export async function getStaticProps() {
       const thumbnail =
         document.getAttribute('thumbnail') || '/images/default-thumbnail.png';
       const date = document.getAttribute('date') || '1970-01-01T00:00:00';
+      const description = document.getAttribute('description') || '';
 
       return {
         slug: file.replace('.adoc', ''),
@@ -40,6 +42,7 @@ export async function getStaticProps() {
         categories,
         thumbnail,
         date,
+        description,
       };
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -67,6 +70,7 @@ export default function Home({
     categories: string[];
     thumbnail: string;
     date: string;
+    description: string;
   }[];
   categories: string[];
 }) {
@@ -75,29 +79,33 @@ export default function Home({
 
   const filteredArticles = articles
     .filter((article) =>
-      article.title.toLowerCase().includes(searchQuery.toLowerCase())
+      article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      article.description.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    .slice(0, 6);
+    .slice(0, 9);
+
+  const featuredArticles = articles.slice(0, 3);
+  const recentArticles = articles.slice(0, 6);
 
   return (
     <>
       <Head>
-        <title>RuangCodes</title>
+        <title>RuangCodes - Blog & Tutorial Teknologi</title>
         <meta
           name="description"
-          content="Panduan dan tutorial teknologi modern"
+          content="Blog teknologi modern berisi panduan, tutorial, dan dokumentasi programming terbaru"
         />
       </Head>
       
       <Header />
       
-      <div className="flex bg-gray-900 min-h-screen pt-16">
-        {/* Desktop Sidebar - Always visible on desktop */}
+      <div className="flex bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen pt-16">
+        {/* Desktop Sidebar */}
         <div className="hidden md:block">
           <Sidebar categories={categories} />
         </div>
         
-        {/* Mobile Sidebar and Overlay */}
+        {/* Mobile Sidebar */}
         {isSidebarOpen && (
           <>
             <div
@@ -109,64 +117,181 @@ export default function Home({
         )}
         
         <main
-          className={`flex-1 p-4 md:p-8 font-mono text-gray-100 transition-all duration-300 ${
+          className={`flex-1 p-6 md:p-8 transition-all duration-300 ${
             isSidebarOpen ? 'ml-0 md:ml-64' : 'ml-0 md:ml-16'
           }`}
         >
-          <h1 className="text-2xl md:text-4xl font-bold mb-2">
-            📚 Artikel Terbaru RuangCodes
-          </h1>
-          <p className="text-base md:text-lg text-gray-400 mb-4 md:mb-8">
-            Panduan, tutorial, dan dokumentasi dari RuangCodes.
-          </p>
-          <div className="relative mb-4 md:mb-8">
-            <input
-              type="text"
-              placeholder="Cari artikel..."
-              className="w-full p-2 md:p-3 pl-8 md:pl-10 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Search className="absolute left-2 md:left-3 top-2.5 md:top-3.5 h-4 w-4 md:h-5 md:w-5 text-gray-400" />
-          </div>
-          <section className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
-            {filteredArticles.map(({ slug, title, thumbnail, categories }) => (
-              <Link key={slug} href={`/artikel/${slug}`} passHref>
-                <div className="h-full flex flex-col p-3 md:p-6 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-all duration-200 cursor-pointer">
-                  <div className="w-full aspect-[16/9] mb-2 md:mb-4 overflow-hidden rounded-md bg-gray-700">
-                    <Image
-                      src={thumbnail}
-                      alt={title}
-                      className="object-cover w-full h-full"
-                      width={640}
-                      height={360}
-                    />
-                  </div>
-                  <h2 className="text-sm md:text-xl font-semibold mb-1 md:mb-2 line-clamp-2">
-                    {title}
-                  </h2>
-                  <div className="mt-auto pt-2 md:pt-4 flex flex-wrap gap-1 md:gap-2">
-                    {categories.map((cat) => (
-                      <span
-                        key={cat}
-                        className="inline-block px-2 py-0.5 md:px-3 md:py-1 text-xs bg-gray-700 rounded-full text-gray-300"
-                      >
-                        {cat}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </Link>
-            ))}
+          {/* Hero Section */}
+          <section className="mb-12 text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              Ruang<span className="text-white">Codes</span>
+            </h1>
+            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              Tempat berbagi pengetahuan tentang programming, teknologi, dan pengembangan software. 
+              Mari belajar dan berkembang bersama!
+            </p>
+            
+            {/* Search Bar */}
+            <div className="relative max-w-2xl mx-auto mb-12">
+              <input
+                type="text"
+                placeholder="Cari artikel atau tutorial..."
+                className="w-full p-4 pl-12 bg-gray-800 border border-gray-700 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg backdrop-blur-sm"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" />
+            </div>
           </section>
-          <div className="mt-6 md:mt-12 text-center">
-            <Link href="/kategori/artikel" passHref>
-              <button className="flex items-center px-4 py-2 md:px-6 md:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors duration-200 text-xs md:text-sm font-semibold mx-auto">
-                Artikel Lainnya
-                <ArrowRight className="h-3 w-3 md:h-4 md:w-4 ml-1 md:ml-2" />
-              </button>
-            </Link>
-          </div>
+
+          {/* Featured Articles */}
+          {searchQuery === '' && (
+            <section className="mb-16">
+              <h2 className="text-3xl font-bold text-white mb-8 flex items-center">
+                <BookOpen className="mr-3 text-blue-400" />
+                Artikel Unggulan
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {featuredArticles.map((article, index) => (
+                  <Link key={article.slug} href={`/artikel/${article.slug}`} passHref>
+                    <div className="group bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-blue-500 transition-all duration-300 hover:transform hover:-translate-y-2 cursor-pointer">
+                      <div className="w-full aspect-video mb-4 overflow-hidden rounded-xl bg-gradient-to-br from-blue-500 to-purple-600">
+                        <Image
+                          src={article.thumbnail}
+                          alt={article.title}
+                          className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-300"
+                          width={400}
+                          height={225}
+                        />
+                      </div>
+                      <div className="flex items-center gap-2 mb-3">
+                        {article.categories.slice(0, 2).map((cat) => (
+                          <span
+                            key={cat}
+                            className="px-3 py-1 text-xs bg-blue-500/20 text-blue-300 rounded-full border border-blue-500/30"
+                          >
+                            {cat}
+                          </span>
+                        ))}
+                      </div>
+                      <h3 className="text-xl font-semibold text-white mb-2 line-clamp-2 group-hover:text-blue-300 transition-colors">
+                        {article.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm line-clamp-3">
+                        {article.description}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Recent Articles */}
+          <section>
+            <h2 className="text-3xl font-bold text-white mb-8 flex items-center">
+              {searchQuery ? 'Hasil Pencarian' : 'Artikel Terbaru'}
+              <span className="ml-3 text-blue-400 text-lg">
+                ({filteredArticles.length})
+              </span>
+            </h2>
+            
+            {filteredArticles.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-gray-400 text-lg mb-4">
+                  Tidak ada artikel yang ditemukan untuk "{searchQuery}"
+                </div>
+                <button 
+                  onClick={() => setSearchQuery('')}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors"
+                >
+                  Tampilkan Semua Artikel
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredArticles.map((article) => (
+                  <Link key={article.slug} href={`/artikel/${article.slug}`} passHref>
+                    <div className="group bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-blue-500 transition-all duration-300 hover:bg-gray-750 cursor-pointer">
+                      <div className="w-full aspect-video mb-4 overflow-hidden rounded-lg bg-gradient-to-br from-gray-700 to-gray-600">
+                        <Image
+                          src={article.thumbnail}
+                          alt={article.title}
+                          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                          width={300}
+                          height={169}
+                        />
+                      </div>
+                      <div className="flex items-center gap-2 mb-3 flex-wrap">
+                        {article.categories.slice(0, 2).map((cat) => (
+                          <span
+                            key={cat}
+                            className="px-2 py-1 text-xs bg-gray-700 text-gray-300 rounded-full"
+                          >
+                            {cat}
+                          </span>
+                        ))}
+                      </div>
+                      <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2 group-hover:text-blue-300 transition-colors">
+                        {article.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm line-clamp-3 mb-4">
+                        {article.description}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-blue-400 text-sm font-medium group-hover:text-blue-300 transition-colors">
+                          Baca Selengkapnya →
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </section>
+
+          {/* Categories Overview */}
+          {searchQuery === '' && (
+            <section className="mt-16">
+              <h2 className="text-3xl font-bold text-white mb-8 flex items-center">
+                <Code className="mr-3 text-blue-400" />
+                Kategori Populer
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {categories.slice(0, 8).map((category) => (
+                  <Link
+                    key={category}
+                    href={`/kategori/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                    className="bg-gray-800 rounded-xl p-6 text-center border border-gray-700 hover:border-blue-500 transition-all duration-300 hover:transform hover:-translate-y-1 cursor-pointer group"
+                  >
+                    <div className="text-blue-400 mb-3 group-hover:text-blue-300 transition-colors">
+                      {category === 'Programming' && <Code size={32} className="mx-auto" />}
+                      {category === 'Database' && <Database size={32} className="mx-auto" />}
+                      {category === 'DevOps' && <Server size={32} className="mx-auto" />}
+                      {!['Programming', 'Database', 'DevOps'].includes(category) && 
+                       <BookOpen size={32} className="mx-auto" />}
+                    </div>
+                    <h3 className="text-white font-semibold group-hover:text-blue-300 transition-colors">
+                      {category}
+                    </h3>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Load More Button */}
+          {searchQuery === '' && articles.length > 9 && (
+            <div className="text-center mt-12">
+              <Link href="/kategori/artikel" passHref>
+                <button className="flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl hover:from-blue-500 hover:to-purple-500 transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl mx-auto font-semibold text-lg">
+                  Lihat Semua Artikel
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </button>
+              </Link>
+            </div>
+          )}
+
           <Footer />
         </main>
       </div>

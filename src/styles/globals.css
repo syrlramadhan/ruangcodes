@@ -1,106 +1,98 @@
+/* styles/globals.css */
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary-blue: #2563eb;
+  --secondary-blue: #3b82f6;
+  --dark-blue: #1e3a8a;
+  --light-blue: #60a5fa;
+}
 
 body {
-  @apply bg-gray-900 text-gray-100;
+  font-family: 'Inter', sans-serif;
+  @apply bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100;
 }
 
-.toc ul {
-  @apply list-none p-0 m-0 space-y-2;
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
 }
 
-.toc li {
-  @apply text-sm hover:text-blue-400;
+::-webkit-scrollbar-track {
+  @apply bg-gray-800;
 }
 
-.toc a {
-  @apply text-gray-300 no-underline hover:underline;
+::-webkit-scrollbar-thumb {
+  @apply bg-blue-600 rounded-full;
 }
 
-.toc .sectlevel1 > li {
-  @apply font-bold;
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-blue-500;
 }
 
-.toc .sectlevel2 > li {
-  @apply ml-4;
+/* Gradient text */
+.gradient-text {
+  @apply bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent;
 }
 
-h2 {
-  @apply font-bold text-2xl mt-8;
+/* Card hover effects */
+.card-hover {
+  @apply transition-all duration-300 hover:transform hover:-translate-y-2 hover:shadow-xl;
 }
 
-h3 {
-  @apply font-bold mt-4;
+/* Button animations */
+.btn-primary {
+  @apply bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl;
 }
 
-p {
-  @apply mb-4;
+/* Code block styling */
+.prose pre {
+  @apply bg-gray-800 border border-gray-700 rounded-xl p-4;
 }
 
+.prose code {
+  @apply bg-gray-700 px-2 py-1 rounded text-sm;
+}
+
+/* Image styling */
+.prose img {
+  @apply rounded-xl shadow-lg;
+}
+
+/* Table styling */
 .prose table {
-  width: 100%;
-  border-collapse: collapse;
+  @apply w-full border-collapse rounded-lg overflow-hidden;
 }
 
-.prose table, 
-.prose th, 
+.prose th {
+  @apply bg-gray-700 text-left p-3 font-semibold;
+}
+
 .prose td {
-  border: 1px solid #4B5563; /* Tailwind: gray-600 */
+  @apply border-t border-gray-600 p-3;
 }
 
-.prose th, 
-.prose td {
-  padding: 0.75rem;
-  text-align: left;
+/* Link styling */
+.prose a {
+  @apply text-blue-400 hover:text-blue-300 transition-colors duration-200;
 }
 
-/* Base image styling */
-.imageblock img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+/* Custom utilities */
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px);
 }
 
-/* Hover effect */
-.imageblock img:hover {
-  transform: scale(1.02);
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-/* Alignment options */
-.imageblock.right {
-  float: right;
-  margin: 0 0 1rem 1.5rem;
-  max-width: 50%;
-}
-
-.imageblock.left {
-  float: left;
-  margin: 0 1.5rem 1rem 0;
-  max-width: 50%;
-}
-
-.imageblock.center {
-  margin: 2rem auto;
-  display: block;
-  text-align: center;
-}
-
-/* Caption styling */
-.imageblock .title {
-  font-size: 0.9rem;
-  text-align: center;
-  color: #9ca3af;
-  margin-top: 0.5rem;
-}
-
-/* Sembunyikan sidebar TOC dan hapus margin kanan pada layar kecil */
-@media (max-width: 1024px) {
-  .toc-sidebar {
-    @apply hidden;
-  }
-  main {
-    @apply mr-0;
-  }
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

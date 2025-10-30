@@ -428,18 +428,18 @@ export default function ArtikelPage({
         <meta property="og:type" content="article" />
         <meta property="og:title" content={`${title} | RuangCodes`} />
         <meta property="og:description" content={description} />
-        <meta property="og:url" content={`https://ruangcodes.vercel.app/artikel/${slug}`} />
-        <meta property="og:image" content={`https://ruangcodes.vercel.app/images/${slug}.png`} />
-        <meta property="og:image:secure_url" content={`https://ruangcodes.vercel.app/images/${slug}.png`} />
+        <meta property="og:url" content={`https://ruang.syahrulramadhan.site/artikel/${slug}`} />
+        <meta property="og:image" content={`https://ruang.syahrulramadhan.site/images/${slug}.png`} />
+        <meta property="og:image:secure_url" content={`https://ruang.syahrulramadhan.site/images/${slug}.png`} />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`${title} | RuangCodes`} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={`https://ruangcodes.vercel.app/images/${slug}.png`} />
+        <meta name="twitter:image" content={`https://ruang.syahrulramadhan.site/images/${slug}.png`} />
 
         {/* Fallback untuk platform yang baca <meta name="image"> */}
-        <meta name="image" content={`https://ruangcodes.vercel.app/images/${slug}.png`} />
+        <meta name="image" content={`https://ruang.syahrulramadhan.site/images/${slug}.png`} />
         <link
           href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap"
           rel="stylesheet"
