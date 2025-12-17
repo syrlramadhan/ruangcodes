@@ -129,7 +129,7 @@ export default function CategoryPage({
   category: string;
   categories: string[];
 }) {
-  const { isSidebarOpen, toggleSidebar } = useSidebar();
+  const { isSidebarOpen } = useSidebar();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 

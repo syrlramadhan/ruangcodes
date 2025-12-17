@@ -75,7 +75,7 @@ export default function Home({
   categories: string[];
 }) {
   const [searchQuery, setSearchQuery] = useState('');
-  const { isSidebarOpen, toggleSidebar } = useSidebar();
+  const { isSidebarOpen } = useSidebar();
 
   const filteredArticles = articles
     .filter((article) =>

@@ -159,7 +159,6 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
 
 export default function ArtikelPage({
   html,
-  toc,
   title,
   categories,
   description,
@@ -178,7 +177,7 @@ export default function ArtikelPage({
   slug: string;
 }) {
   const router = useRouter();
-  const { isSidebarOpen, toggleSidebar } = useSidebar();
+  const { isSidebarOpen } = useSidebar();
   const [shareUrl, setShareUrl] = useState('');
 
   useEffect(() => {
