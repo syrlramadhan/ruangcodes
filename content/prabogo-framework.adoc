@@ -1,0 +1,131 @@
+= Prabogo Framework: Pendekatan Modern Membangun Backend Golang
+:description: Mengenal Prabogo Framework — framework Golang yang menggabungkan arsitektur hexagonal, code generation, dan tooling modern untuk pengembangan backend yang terstruktur.
+:thumbnail: /images/prabogo-framework.png
+:categories: Artikel
+:toc: left
+:date: 2025-12-17T16:00:00+08:00
+:link-base-path: /artikel/
+
+== Pendahuluan
+
+Dalam pengembangan backend menggunakan Golang, banyak developer menghadapi tantangan yang sama:
+struktur proyek tidak konsisten, boilerplate berulang, dan ketergantungan yang sulit dipisahkan dari logika bisnis.
+
+Framework HTTP seperti Gin atau Echo memang cepat dan ringan, namun sering kali belum cukup ketika aplikasi tumbuh menjadi besar dan kompleks.
+
+Di sinilah *Prabogo Framework* hadir — bukan sekadar web framework, melainkan framework arsitektur dan tooling
+yang membantu developer membangun aplikasi backend Golang secara terstruktur, modular, dan berkelanjutan.
+
+image::prabogo-framework.png[Prabogo Framework, width=500, align=center]
+
+== Apa Itu Prabogo Framework?
+
+Prabogo adalah framework Golang yang dirancang untuk:
+
+* Mengadopsi Hexagonal Architecture (Ports & Adapters)
+* Memisahkan domain bisnis dari detail teknis
+* Menyediakan CLI interaktif dan code generation
+* Mempercepat pengembangan tanpa mengorbankan kualitas desain
+
+Berbeda dengan framework yang hanya fokus pada routing HTTP, Prabogo berfokus pada arsitektur aplikasi backend secara menyeluruh.
+
+== Filosofi dan Arsitektur Dasar
+
+Prabogo mengadopsi *Hexagonal Architecture*, yang bertujuan menjaga agar core business logic
+tetap bersih dan tidak bergantung pada teknologi tertentu.
+
+[vertical]
+* Domain
+* Ports (Interface)
+* Adapters (Infrastructure)
+
+[cols="1,3"]
+|===
+| Domain | Berisi logika bisnis murni, bebas dari framework dan infrastruktur
+| Ports | Interface sebagai kontrak antara domain dan dunia luar
+| Adapters | Implementasi seperti HTTP (Fiber), PostgreSQL, Redis, RabbitMQ
+|===
+
+== Fitur Utama Prabogo Framework
+
+=== CLI Interaktif & Code Generation
+
+Prabogo menyediakan perintah berbasis CLI untuk menghasilkan boilerplate seperti:
+
+* Model dan migration database
+* HTTP handler
+* Adapter database dan cache
+* Message consumer
+* Struktur domain dan port
+
+Hal ini membantu developer fokus pada logika bisnis, bukan penulisan kode berulang.
+
+=== Struktur Proyek Terstandarisasi
+
+Contoh struktur proyek Prabogo:
+
+----
+cmd/
+internal/
+  domain/
+  port/
+  adapter/
+model/
+migration/
+utils/
+----
+
+Struktur ini membantu penerapan best practice sejak awal pengembangan.
+
+=== Integrasi Tooling Modern
+
+Prabogo memanfaatkan ekosistem Go yang sudah matang:
+
+* Fiber
+* PostgreSQL
+* Redis
+* RabbitMQ
+* Docker
+
+Framework ini menyatukan semuanya dalam satu arsitektur yang konsisten.
+
+== Perbandingan dengan Framework Lain
+
+[cols="1,1,1,1"]
+|===
+| Aspek | Prabogo | Gin / Echo | Beego
+| Fokus | Arsitektur & Tooling | HTTP API | MVC
+| Hexagonal Architecture | Ya | Tidak | Tidak
+| Code Generator | Ya | Tidak | Terbatas
+| Cocok untuk | Proyek menengah–besar | API sederhana | Web monolith
+|===
+
+== Kapan Menggunakan Prabogo?
+
+Prabogo cocok digunakan jika:
+
+* Proyek backend memiliki kompleksitas tinggi
+* Dibutuhkan arsitektur yang rapi dan scalable
+* Aplikasi memiliki banyak integrasi eksternal
+
+Untuk proyek kecil atau prototipe cepat, framework ringan mungkin lebih sesuai.
+
+== Refleksi
+
+Prabogo menunjukkan bahwa arsitektur adalah investasi jangka panjang.
+Dengan struktur yang jelas sejak awal, developer dapat mengurangi technical debt
+dan membangun sistem yang lebih tahan terhadap perubahan.
+
+== Penutup
+
+Prabogo Framework menawarkan pendekatan modern dalam pengembangan backend Golang.
+Bagi developer yang mengutamakan arsitektur bersih, modularitas, dan skalabilitas,
+Prabogo dapat menjadi fondasi yang kuat.
+
+== Referensi
+
+* https://prabogo.com
+* https://prabogo.com/docs/
+* https://github.com/prabogo/prabogo
+* CodePolitan – Framework Prabogo
+* Alistair Cockburn – Hexagonal Architecture

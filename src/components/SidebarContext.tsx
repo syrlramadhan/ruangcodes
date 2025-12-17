@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 interface SidebarContextType {
   isSidebarOpen: boolean;
   isMobile: boolean;
+  isHydrated: boolean;
   toggleSidebar: () => void;
   closeSidebar: () => void;
   openSidebar: () => void;
@@ -12,29 +13,31 @@ interface SidebarContextType {
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  // Default to true for desktop to prevent flash
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768); // Tailwind's md breakpoint
-      // Close sidebar by default on mobile
-      if (window.innerWidth < 768) {
-        setIsSidebarOpen(false);
-      } else {
-        setIsSidebarOpen(true); // Open by default on desktop
+      const mobile = window.innerWidth < 768; // Tailwind's md breakpoint
+      setIsMobile(mobile);
+      // Only set sidebar state on initial hydration or resize
+      if (!isHydrated) {
+        setIsSidebarOpen(!mobile);
       }
     };
 
     // Initial check
     checkIfMobile();
+    setIsHydrated(true);
 
     // Add event listener for window resize
     window.addEventListener('resize', checkIfMobile);
 
     // Cleanup
     return () => window.removeEventListener('resize', checkIfMobile);
-  }, []);
+  }, [isHydrated]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(prev => !prev);
@@ -53,6 +56,7 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
       value={{ 
         isSidebarOpen, 
         isMobile,
+        isHydrated,
         toggleSidebar, 
         closeSidebar,
         openSidebar

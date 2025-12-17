@@ -150,84 +150,80 @@ export default function CategoryPage({
         <meta name="description" content={`Kumpulan artikel tentang ${category}`} />
       </Head>
       <Header />
-      <div className="flex bg-gray-900 min-h-screen pt-16">
+      <div className="flex min-h-screen pt-16" style={{ background: 'var(--bg-primary)' }}>
         {/* Desktop Sidebar - Always visible on desktop */}
         <div className="hidden md:block">
           <Sidebar categories={categories} currentCategory={category} />
         </div>
 
-        {/* Mobile Sidebar and Overlay */}
+        {/* Mobile Sidebar */}
         {isSidebarOpen && (
-          <>
-            <div
-              className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
-              onClick={toggleSidebar}
-            />
-            <NavMobile categories={categories} currentCategory={category} />
-          </>
+          <NavMobile categories={categories} currentCategory={category} />
         )}
         
         <main
-          className={`flex-1 p-4 md:p-8 font-mono text-gray-100 transition-all duration-300 ${
+          className={`flex-1 p-4 md:p-8 font-mono text-[var(--text-primary)] transition-all duration-300 ${
             isSidebarOpen ? 'ml-0 md:ml-64' : 'ml-0 md:ml-16'
           }`}
         >
           <div className="max-w-5xl mx-auto">
             {/* Header */}
             <div className="flex items-center mb-4 md:mb-6">
-              <BookOpen size={24} className="mr-3 md:mr-5" />
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-100">
+              <BookOpen size={24} className="mr-3 md:mr-5 text-blue-400" />
+              <h1 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)]">
                 {category}
               </h1>
             </div>
 
             {/* Articles Grid */}
             {articles.length === 0 ? (
-              <div className="bg-gray-800 p-6 md:p-8 rounded-lg border border-gray-700">
-                <p className="text-gray-400">Belum ada artikel dalam kategori ini.</p>
+              <div className="bg-[var(--bg-card)] p-6 md:p-8 rounded-lg border border-[var(--border-primary)] shadow-sm">
+                <p className="text-[var(--text-tertiary)]">Belum ada artikel dalam kategori ini.</p>
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                   {paginatedArticles.map((article) => (
                     <Link
                       key={article.slug}
                       href={`/artikel/${article.slug}`}
-                      className="h-full flex flex-col p-3 md:p-6 bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-700 transition-colors"
+                      className="group h-full flex flex-col bg-[var(--bg-card)] rounded-xl overflow-hidden border border-[var(--border-primary)] hover:border-blue-500 transition-all duration-300 shadow-sm hover:shadow-md"
                     >
                       {/* Thumbnail */}
-                      <div className="w-full aspect-[16/9] mb-2 md:mb-4 overflow-hidden rounded-md bg-gray-700">
+                      <div className="w-full aspect-[16/9] overflow-hidden bg-[var(--bg-tertiary)]">
                         <Image
                           src={article.thumbnail}
                           alt={article.title}
-                          className="object-cover w-full h-full"
+                          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                           width={640}
                           height={360}
                         />
                       </div>
                       
-                      {/* Title */}
-                      <h2 className="text-sm md:text-xl font-semibold mb-1 md:mb-2 line-clamp-2">
-                        {article.title}
-                      </h2>
-                      
-                      {/* Description */}
-                      {article.description && (
-                        <p className="text-xs md:text-base text-gray-400 line-clamp-2 md:line-clamp-3 mb-2 md:mb-4">
-                          {article.description}
-                        </p>
-                      )}
-                      
-                      {/* Categories */}
-                      <div className="mt-auto pt-1 md:pt-2 flex flex-wrap gap-1 md:gap-2">
-                        {article.categories.map((cat) => (
-                          <span
-                            key={cat}
-                            className="inline-block px-2 py-0.5 md:px-3 md:py-1 text-xs bg-gray-700 rounded-full text-gray-300"
-                          >
-                            {cat}
-                          </span>
-                        ))}
+                      <div className="flex flex-col flex-1 p-3 md:p-5">
+                        {/* Title */}
+                        <h2 className="text-sm md:text-lg font-semibold mb-1 md:mb-2 line-clamp-2 text-[var(--text-primary)] group-hover:text-blue-400 transition-colors">
+                          {article.title}
+                        </h2>
+                        
+                        {/* Description */}
+                        {article.description && (
+                          <p className="text-xs md:text-sm text-[var(--text-tertiary)] line-clamp-2 mb-2 md:mb-3 flex-1">
+                            {article.description}
+                          </p>
+                        )}
+                        
+                        {/* Categories */}
+                        <div className="pt-2 md:pt-3 border-t border-[var(--border-primary)] flex flex-wrap gap-1 md:gap-2">
+                          {article.categories.slice(0, 2).map((cat) => (
+                            <span
+                              key={cat}
+                              className="inline-block px-2 py-0.5 md:px-3 md:py-1 text-xs bg-[var(--bg-tertiary)] rounded-full text-[var(--text-secondary)] font-medium"
+                            >
+                              {cat}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </Link>
                   ))}
@@ -247,7 +243,7 @@ export default function CategoryPage({
                       Sebelumnya
                     </button>
                     
-                    <span className="text-xs md:text-sm text-gray-300">
+                    <span className="text-xs md:text-sm text-[var(--text-secondary)]">
                       Halaman {currentPage} dari {totalPages}
                     </span>
                     

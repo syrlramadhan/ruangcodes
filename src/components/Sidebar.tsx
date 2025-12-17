@@ -1,10 +1,9 @@
-// components/Sidebar.tsx (yang sudah dimodifikasi)
+// components/Sidebar.tsx
 import Link from 'next/link';
 import {
   Home,
   ChevronLeft,
   ChevronRight,
-  Menu,
   Bookmark,
   BookOpen,
   FileText,
@@ -12,7 +11,6 @@ import {
   Database,
   Server,
   Terminal,
-  X,
 } from 'lucide-react';
 import { JSX } from 'react';
 import { useSidebar } from './SidebarContext';
@@ -40,46 +38,35 @@ export default function Sidebar({
 }: SidebarProps) {
   const { isSidebarOpen, toggleSidebar, isMobile } = useSidebar();
 
-  if (isMobile && !isSidebarOpen) {
+  // Don't render desktop sidebar on mobile - NavMobile handles mobile navigation
+  if (isMobile) {
     return null;
   }
 
   return (
     <>
       <aside
-        className={`bg-gradient-to-b from-gray-800 to-gray-900 border-r border-gray-700 fixed top-16 h-[calc(100vh-64px)] overflow-y-auto transition-all duration-300 z-40 backdrop-blur-sm ${
+        className={`sidebar-bg border-r border-[var(--border-primary)] fixed top-16 h-[calc(100vh-64px)] flex flex-col transition-all duration-300 z-40 shadow-[var(--shadow-sm)] ${
           isSidebarOpen ? 'w-64' : 'w-16'
-        } ${isMobile ? 'left-0' : 'left-0'}`}
+        } left-0`}
       >
-        <button
-          onClick={toggleSidebar}
-          className={`absolute -right-3 top-6 z-50 p-2 bg-blue-600 rounded-full text-white hover:bg-blue-500 transition-all duration-300 border border-blue-400 shadow-lg ${
-            isSidebarOpen ? '' : 'rotate-180'
-          }`}
-        >
-          {isSidebarOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
-        </button>
-        
-        <div className={`p-6 space-y-8 ${isSidebarOpen ? 'w-64' : 'w-16 mt-8'}`}>
+        <div className={`space-y-6 flex-1 overflow-y-auto overflow-x-hidden ${isSidebarOpen ? 'p-4' : 'p-2 pt-4'}`}>
           {/* Navigation */}
           <div>
-            <h2
-              className={`text-lg font-semibold text-white mb-4 flex items-center ${
-                !isSidebarOpen && 'justify-center'
-              }`}
-            >
-              <Menu size={isSidebarOpen ? 20 : 24} className={isSidebarOpen ? 'mr-3' : ''} />
-              {isSidebarOpen && 'Navigasi'}
-            </h2>
-            <nav className="space-y-2">
+            {isSidebarOpen && (
+              <h2 className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-3 px-3">
+                Navigasi
+              </h2>
+            )}
+            <nav className="space-y-1">
               <Link
                 href="/"
-                className={`flex items-center px-3 py-3 text-gray-300 hover:bg-blue-600/20 rounded-xl transition-all duration-300 hover:text-white hover:border-l-4 hover:border-blue-400 ${
-                  !isSidebarOpen && 'justify-center'
+                className={`flex items-center py-2.5 text-[var(--text-secondary)] hover:bg-blue-600/20 rounded-lg transition-all duration-200 hover:text-[var(--text-primary)] ${
+                  isSidebarOpen ? 'px-3' : 'px-0 justify-center'
                 }`}
                 title={!isSidebarOpen ? 'Beranda' : undefined}
               >
-                <Home size={20} />
+                <Home size={20} className="flex-shrink-0" />
                 {isSidebarOpen && <span className="ml-3 font-medium">Beranda</span>}
               </Link>
             </nav>
@@ -87,50 +74,56 @@ export default function Sidebar({
 
           {/* Categories */}
           <div>
-            <h2
-              className={`text-lg font-semibold text-white mb-4 flex items-center ${
-                !isSidebarOpen && 'justify-center'
-              }`}
-            >
-              <BookOpen
-                size={isSidebarOpen ? 20 : 24}
-                className={isSidebarOpen ? 'mr-3' : ''}
-              />
-              {isSidebarOpen && 'Kategori'}
-            </h2>
-            <nav className="space-y-2">
+            {isSidebarOpen && (
+              <h2 className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-3 px-3">
+                Kategori
+              </h2>
+            )}
+            <nav className="space-y-1">
               {categories.length > 0 ? (
-                categories.map((category) => (
-                  <Link
-                    key={category}
-                    href={`/kategori/${category.toLowerCase().replace(/\s+/g, '-')}`}
-                    className={`flex items-center px-3 py-3 rounded-xl transition-all duration-300 ${
-                      currentCategory === category
-                        ? 'bg-blue-600 text-white border-l-4 border-blue-400'
-                        : 'text-gray-300 hover:bg-blue-600/20 hover:text-white hover:border-l-4 hover:border-blue-400'
-                    } ${!isSidebarOpen && 'justify-center'}`}
-                    title={!isSidebarOpen ? category : undefined}
-                  >
-                    {categoryIcons[category] || <Bookmark size={20} />}
-                    {isSidebarOpen && <span className="ml-3 font-medium">{category}</span>}
-                  </Link>
-                ))
+                categories.map((category) => {
+                  const isActive = currentCategory?.toLowerCase() === category.toLowerCase();
+                  return (
+                    <Link
+                      key={category}
+                      href={`/kategori/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                      className={`flex items-center py-2.5 rounded-lg transition-all duration-200 ${
+                        isActive
+                          ? 'bg-blue-600 text-white'
+                          : 'text-[var(--text-secondary)] hover:bg-blue-600/20 hover:text-[var(--text-primary)]'
+                      } ${isSidebarOpen ? 'px-3' : 'px-0 justify-center'}`}
+                      title={!isSidebarOpen ? category : undefined}
+                    >
+                      <span className="flex-shrink-0">
+                        {categoryIcons[category] || <Bookmark size={20} />}
+                      </span>
+                      {isSidebarOpen && <span className="ml-3 font-medium truncate">{category}</span>}
+                    </Link>
+                  );
+                })
               ) : (
-                <div className={`flex ${!isSidebarOpen ? 'justify-center' : ''}`}>
-                  <X size={20} className="text-gray-400" />
+                <div className={`flex items-center text-[var(--text-muted)] text-sm py-2.5 ${!isSidebarOpen ? 'justify-center' : 'px-3'}`}>
+                  {isSidebarOpen ? 'Tidak ada kategori' : <Bookmark size={20} className="opacity-30" />}
                 </div>
               )}
             </nav>
           </div>
         </div>
+
+        {/* Toggle Button at Bottom */}
+        <div className={`border-t border-[var(--border-primary)] ${isSidebarOpen ? 'p-3' : 'p-2'}`}>
+          <button
+            onClick={toggleSidebar}
+            className={`flex items-center w-full py-2.5 text-[var(--text-secondary)] hover:bg-blue-600/20 rounded-lg transition-all duration-200 hover:text-[var(--text-primary)] ${
+              isSidebarOpen ? 'px-3' : 'px-0 justify-center'
+            }`}
+            title={!isSidebarOpen ? 'Buka Sidebar' : undefined}
+          >
+            {isSidebarOpen ? <ChevronLeft size={20} className="flex-shrink-0" /> : <ChevronRight size={20} className="flex-shrink-0" />}
+            {isSidebarOpen && <span className="ml-3 font-medium">Tutup Sidebar</span>}
+          </button>
+        </div>
       </aside>
-      
-      {isMobile && isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30"
-          onClick={toggleSidebar}
-        />
-      )}
     </>
   );
 }

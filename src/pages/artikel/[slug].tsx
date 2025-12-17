@@ -209,210 +209,6 @@ export default function ArtikelPage({
     };
 
     registerLanguages();
-
-    const style = document.createElement('style');
-    style.textContent = `
-      .imageblock {
-        margin: 2rem 0;
-      }
-      .imageblock .content {
-        display: flex;
-        justify-content: center;
-      }
-      .imageblock Image {
-        max-width: 100%;
-        height: auto;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-      }
-      .imageblock Image:hover {
-        transform: scale(1.02);
-      }
-      .imageblock.right {
-        float: right;
-        margin: 0 0 1rem 1.5rem;
-        max-width: 50%;
-      }
-      .imageblock.left {
-        float: left;
-        margin: 0 1.5rem 1rem 0;
-        max-width: 50%;
-      }
-      .imageblock.center {
-        margin: 2rem auto;
-        display: block;
-        text-align: center;
-      }
-      .imageblock .title {
-        font-size: 0.9rem;
-        text-align: center;
-        color: #9ca3af;
-        margin-top: 0.5rem;
-      }
-      pre code.hljs {
-        display: block;
-        overflow-x: auto;
-        padding: 1.5em;
-        border-radius: 0.5rem;
-        background: #282c34;
-        color: #abb2bf;
-        font-family: 'Fira Code', 'Courier New', monospace;
-        line-height: 1.6;
-        tab-size: 4;
-        margin: 1.5rem 0;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-      .hljs-comment,
-      .hljs-quote {
-        color: #5c6370;
-        font-style: italic;
-      }
-      .hljs-doctag,
-      .hljs-keyword,
-      .hljs-formula {
-        color: #c678dd;
-      }
-      .hljs-section,
-      .hljs-name,
-      .hljs-selector-tag,
-      .hljs-deletion,
-      .hljs-subst {
-        color: #e06c75;
-      }
-      .hljs-literal {
-        color: #56b6c2;
-      }
-      .hljs-string,
-      .hljs-regexp,
-      .hljs-addition,
-      .hljs-attribute,
-      .hljs-meta-string {
-        color: #98c379;
-      }
-      .hljs-built_in,
-      .hljs-class .hljs-title {
-        color: #e6c07b;
-      }
-      .hljs-attr,
-      .hljs-variable,
-      .hljs-template-variable,
-      .hljs-type,
-      .hljs-selector-class,
-      .hljs-selector-attr,
-      .hljs-selector-pseudo,
-      .hljs-number {
-        color: #d19a66;
-      }
-      .hljs-symbol,
-      .hljs-bullet,
-      .hljs-link,
-      .hljs-meta,
-      .hljs-selector-id,
-      .hljs-title {
-        color: #61aeee;
-      }
-      .hljs-emphasis {
-        font-style: italic;
-      }
-      .hljs-strong {
-        font-weight: bold;
-      }
-      .prose a {
-        color: #60a5fa;
-        text-decoration: underline;
-        transition: color 0.2s ease, background-color 0.2s ease;
-        border-radius: 3px;
-        padding: 0 2px;
-      }
-      .prose a:hover {
-        color: #93c5fd;
-        background-color: rgba(96, 165, 250, 0.1);
-        text-decoration: none;
-      }
-      .prose a:visited {
-        color: #a78bfa;
-      }
-      .prose a:focus {
-        outline: 2px solid #60a5fa;
-        outline-offset: 2px;
-      }
-      .related-articles {
-        margin-top: 3rem;
-        padding-top: 2rem;
-        border-top: 1px solid #374151;
-      }
-      .related-articles h2 {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-        color: #f3f4f6;
-      }
-      .related-articles-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 1.5rem;
-      }
-      .related-article-card {
-        background: #1f2937;
-        padding: 1.5rem;
-        border-radius: 0.5rem;
-        transition: transform 0.2s, box-shadow 0.2s;
-      }
-      .related-article-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      }
-      .related-article-card h3 {
-        font-size: 1.125rem;
-        margin-bottom: 0.5rem;
-        color: #e5e7eb;
-      }
-      .category-badge {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        background: #374151;
-        border-radius: 9999px;
-        font-size: 0.875rem;
-        font-weight: 500;
-        margin-right: 0.5rem;
-        margin-bottom: 0.5rem;
-      }
-      aside.w-16 {
-        padding: 0.5rem;
-      }
-      aside.w-16 div {
-        display: none;
-      }
-      aside.w-16:hover {
-        width: 64px;
-      }
-      aside.w-16:hover div {
-        display: block;
-      }
-      @media (max-width: 1024px) {
-        aside {
-          display: none;
-        }
-        main {
-          margin-right: 0 !important;
-        }
-      }
-      @media (max-width: 768px) {
-        main {
-          margin-left: 0 !important;
-          padding: 1rem;
-        }
-        pre code.hljs {
-          padding: 1rem;
-          font-size: 0.9rem;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-
-    return () => {
-      document.head.removeChild(style);
-    };
   }, []);
 
   const handleGoBack = () => {
@@ -442,36 +238,30 @@ export default function ArtikelPage({
         <meta name="image" content={`https://ruang.syahrulramadhan.site/images/${slug}.png`} />
       </Head>
       <Header />
-      <div className="flex bg-gray-900 min-h-screen pt-16">
+      <div className="flex min-h-screen pt-16" style={{ background: 'var(--bg-primary)' }}>
         {/* Desktop Sidebar - Always visible on desktop */}
         <div className="hidden md:block">
           <Sidebar categories={allCategories} currentCategory={categories[0]} />
         </div>
 
-        {/* Mobile Sidebar and Overlay */}
+        {/* Mobile Sidebar */}
         {isSidebarOpen && (
-          <>
-            <div
-              className="mobile-overlay"
-              onClick={toggleSidebar}
-            />
-            <NavMobile categories={allCategories} currentCategory={categories[0]} />
-          </>
+          <NavMobile categories={allCategories} currentCategory={categories[0]} />
         )}
         <main
-          className={`flex-1 p-8 font-mono text-gray-100 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-16'
-            } ${isSidebarOpen ? 'mr-64' : 'mr-16'}`}
+          className={`flex-1 px-4 py-5 md:p-8 font-mono text-[var(--text-primary)] transition-all duration-300 ml-0 ${isSidebarOpen ? 'md:ml-64' : 'md:ml-16'
+            }`}
         >
-          <header className="mb-8">
-            <div className="flex flex-col space-y-4">
-              <div className="flex items-center space-x-4">
+          <header className="mb-5 md:mb-8">
+            <div className="flex flex-col space-y-3 md:space-y-4">
+              <div className="flex flex-wrap items-center gap-2 md:gap-4">
                 <button
                   onClick={handleGoBack}
-                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors duration-200 text-sm font-semibold"
+                  className="flex items-center px-3 py-1.5 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors duration-200 text-xs md:text-sm font-semibold"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 mr-2"
+                    className="h-3 w-3 md:h-4 md:w-4 mr-1.5 md:mr-2"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -485,33 +275,33 @@ export default function ArtikelPage({
                   </svg>
                   Kembali
                 </button>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5 md:gap-2">
                   {categories.map((cat) => (
                     <Link
                       key={cat}
                       href={`/kategori/${cat.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="category-badge hover:bg-gray-600 transition-colors"
+                      className="category-badge text-[10px] md:text-xs hover:bg-[var(--bg-tertiary)] transition-colors"
                     >
                       {cat}
                     </Link>
                   ))}
                 </div>
               </div>
-              <h1 className="text-3xl font-bold text-gray-100">{title}</h1>
+              <h1 className="text-xl md:text-3xl font-bold text-[var(--text-primary)]">{title}</h1>
               {description && (
-                <p className="text-gray-400 text-lg">{description}</p>
+                <p className="text-[var(--text-tertiary)] text-sm md:text-lg">{description}</p>
               )}
             </div>
           </header>
           <article
-            className="prose prose-invert max-w-5xl mx-auto bg-gray-800 p-8 rounded-lg border border-gray-700"
+            className="prose max-w-5xl mx-auto bg-[var(--bg-card)] p-4 md:p-8 rounded-lg border border-[var(--border-primary)]"
             dangerouslySetInnerHTML={{ __html: html }}
           />
-          <div className="max-w-5xl mx-auto mt-12">
-            <h2 className="text-xl font-semibold text-gray-200 mb-4">
+          <div className="max-w-5xl mx-auto mt-8 md:mt-12">
+            <h2 className="text-base md:text-xl font-semibold text-[var(--text-secondary)] mb-3 md:mb-4">
               Bagikan Artikel Ini
             </h2>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 md:gap-4">
               <a
                 href={`https://wa.me/?text=${encodeURIComponent(
                   `${title} - ${shareUrl}`
@@ -566,8 +356,8 @@ export default function ArtikelPage({
                     href={`/artikel/${article.slug}`}
                     passHref
                   >
-                    <div className="h-full flex flex-col p-3 md:p-4 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-all duration-200">
-                      <div className="w-full aspect-[16/9] mb-2 md:mb-3 overflow-hidden rounded-md bg-gray-700">
+                    <div className="h-full flex flex-col p-3 md:p-4 bg-[var(--bg-card)] border border-[var(--border-primary)] rounded-lg hover:bg-[var(--bg-tertiary)] transition-all duration-200">
+                      <div className="w-full aspect-[16/9] mb-2 md:mb-3 overflow-hidden rounded-md bg-[var(--bg-tertiary)]">
                         <Image
                           src={article.thumbnail}
                           alt={article.title}
@@ -580,12 +370,12 @@ export default function ArtikelPage({
                         {article.title}
                       </h3>
                       {article.description && (
-                        <p className="text-xs md:text-sm text-gray-400 line-clamp-2 md:line-clamp-3 flex-grow">
+                        <p className="text-xs md:text-sm text-[var(--text-tertiary)] line-clamp-2 md:line-clamp-3 flex-grow">
                           {article.description}
                         </p>
                       )}
-                      <div className="mt-2 md:mt-3 pt-2 border-t border-gray-700">
-                        <span className="text-xs text-gray-400">
+                      <div className="mt-2 md:mt-3 pt-2 border-t border-[var(--border-primary)]">
+                        <span className="text-xs text-[var(--text-tertiary)]">
                           Baca selengkapnya →
                         </span>
                       </div>
@@ -597,23 +387,6 @@ export default function ArtikelPage({
           )}
           <Footer />
         </main>
-
-        {/* TOC Sidebar - Hidden on mobile */}
-        <aside
-          className={`hidden md:block bg-gray-800 p-4 border-l border-gray-700 fixed top-16 h-[calc(100vh-64px)] overflow-y-auto transition-all duration-300 ${isSidebarOpen ? 'w-64' : 'w-16'
-            } ${isSidebarOpen ? 'right-0' : 'right-0'}`}
-        >
-          <h2
-            className={`text-lg font-semibold text-gray-100 mb-4 ${!isSidebarOpen && 'hidden'
-              }`}
-          >
-            Daftar Isi
-          </h2>
-          <div
-            className="text-gray-300 text-sm"
-            dangerouslySetInnerHTML={{ __html: toc }}
-          />
-        </aside>
       </div>
     </>
   );
