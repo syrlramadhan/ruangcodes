@@ -246,20 +246,47 @@ body {
 }
 
 /* Code block styling */
-.prose pre {
+.prose pre,
+.light .prose pre,
+.dark .prose pre {
   @apply rounded-lg md:rounded-xl p-3 md:p-4 text-xs md:text-sm overflow-x-auto;
-  background: var(--code-bg);
-  border: 1px solid var(--border-primary);
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
 }
 
 .prose code {
-  @apply px-1.5 md:px-2 py-0.5 md:py-1 rounded text-xs md:text-sm text-blue-400;
+  @apply px-1.5 md:px-2 py-0.5 md:py-1 rounded text-xs md:text-sm;
   background: var(--bg-tertiary);
+  color: #e879f9;
 }
 
-.prose pre code {
+.prose pre code,
+.light .prose pre code,
+.dark .prose pre code {
   @apply bg-transparent p-0 text-xs md:text-sm;
-  color: var(--code-text);
+  background: transparent !important;
+  color: #e2e8f0 !important;
+}
+
+/* Force hljs colors */
+.hljs,
+.light .hljs,
+.dark .hljs {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+/* Override for light mode to ensure visibility */
+.light pre,
+.light pre code,
+.light .hljs {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+.light pre code *,
+.light .hljs * {
+  color: inherit;
 }
 
 /* Image styling */

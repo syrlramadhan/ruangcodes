@@ -8,7 +8,6 @@ import Footer from '@/components/Footer';
 import NavMobile from '@/components/NavMobile';
 import AdUnit from '@/components/AdUnit';
 import Link from 'next/link';
-import 'highlight.js/styles/atom-one-dark.css';
 import hljs from 'highlight.js';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -376,7 +375,7 @@ export default function ArtikelPage({
               </a>
               {/* LinkedIn */}
               <a
-                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
+                href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(description || '')}&source=RuangCodes`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-blue-800 hover:bg-blue-700 text-white p-3 rounded-full transition"
