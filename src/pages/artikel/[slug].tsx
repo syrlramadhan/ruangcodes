@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import Footer from '@/components/Footer';
 import NavMobile from '@/components/NavMobile';
+import AdUnit from '@/components/AdUnit';
 import Link from 'next/link';
 import 'highlight.js/styles/atom-one-dark.css';
 import hljs from 'highlight.js';
@@ -342,6 +343,16 @@ export default function ArtikelPage({
               </a>
             </div>
           </div>
+
+          {/* Ad Unit - After Share Buttons */}
+          <div className="max-w-5xl mx-auto mt-8 md:mt-12">
+            <AdUnit 
+              slot="8844646736" 
+              format="horizontal" 
+              className="py-4"
+            />
+          </div>
+
           {/* Related Articles - Now shows 3 on desktop */}
           {relatedArticles.length > 0 && (
             <div className="related-articles max-w-5xl mx-auto mt-6 md:mt-12">
@@ -384,6 +395,16 @@ export default function ArtikelPage({
               </div>
             </div>
           )}
+
+          {/* Ad Unit - Before Footer */}
+          <div className="max-w-5xl mx-auto mt-8 md:mt-12">
+            <AdUnit 
+              slot="3417060239" 
+              format="auto" 
+              className="py-4"
+            />
+          </div>
+
           <Footer />
         </main>
       </div>
