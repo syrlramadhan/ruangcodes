@@ -165,6 +165,7 @@ export default function ArtikelPage({
   description,
   relatedArticles,
   allCategories,
+  thumbnail,
   slug,
 }: {
   html: string;
@@ -180,10 +181,22 @@ export default function ArtikelPage({
   const router = useRouter();
   const { isSidebarOpen } = useSidebar();
   const [shareUrl, setShareUrl] = useState('');
+  const [siteUrl, setSiteUrl] = useState('');
+  const [absoluteThumbnail, setAbsoluteThumbnail] = useState('');
 
   useEffect(() => {
+    // Dapatkan URL dinamis berdasarkan environment
+    const origin = window.location.origin;
+    setSiteUrl(origin);
     setShareUrl(window.location.href);
+    
+    // Cek apakah thumbnail tersedia
+    if (thumbnail) {
+      setAbsoluteThumbnail(thumbnail.startsWith('http') ? thumbnail : `${origin}${thumbnail}`);
+    }
+  }, [thumbnail]);
 
+  useEffect(() => {
     const registerLanguages = async () => {
       try {
         const languages = {
@@ -220,22 +233,30 @@ export default function ArtikelPage({
       <Head>
         <title>{title} | RuangCodes</title>
         <meta name="description" content={description} />
+        
         {/* Open Graph / WhatsApp / Facebook / LinkedIn */}
         <meta property="og:type" content="article" />
-        <meta property="og:title" content={`${title} | RuangCodes`} />
+        <meta property="og:site_name" content="RuangCodes" />
+        <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
-        <meta property="og:url" content={`https://ruang.syahrulramadhan.site/artikel/${slug}`} />
-        <meta property="og:image" content={`https://ruang.syahrulramadhan.site/images/${slug}.png`} />
-        <meta property="og:image:secure_url" content={`https://ruang.syahrulramadhan.site/images/${slug}.png`} />
+        {siteUrl && <meta property="og:url" content={`${siteUrl}/artikel/${slug}`} />}
+        {absoluteThumbnail && <meta property="og:image" content={absoluteThumbnail} />}
+        {absoluteThumbnail && <meta property="og:image:secure_url" content={absoluteThumbnail} />}
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={title} />
 
-        {/* Twitter */}
+        {/* Twitter/X Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${title} | RuangCodes`} />
+        <meta name="twitter:site" content="@ruangcodes" />
+        <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={`https://ruang.syahrulramadhan.site/images/${slug}.png`} />
+        {absoluteThumbnail && <meta name="twitter:image" content={absoluteThumbnail} />}
 
-        {/* Fallback untuk platform yang baca <meta name="image"> */}
-        <meta name="image" content={`https://ruang.syahrulramadhan.site/images/${slug}.png`} />
+        {/* Fallback untuk platform lain */}
+        {absoluteThumbnail && <meta name="image" content={absoluteThumbnail} />}
+        {siteUrl && <link rel="canonical" href={`${siteUrl}/artikel/${slug}`} />}
       </Head>
       <Header />
       <div className="flex min-h-screen pt-16" style={{ background: 'var(--bg-primary)' }}>
