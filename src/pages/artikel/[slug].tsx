@@ -321,11 +321,11 @@ export default function ArtikelPage({
                 )}&text=${encodeURIComponent(title)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-blue-500 hover:bg-blue-400 text-white p-3 rounded-full transition"
-                title="Bagikan ke Twitter"
+                className="bg-black hover:bg-gray-800 text-white p-3 rounded-full transition"
+                title="Bagikan ke X"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M24 4.56c-.89.4-1.84.66-2.83.78a4.92 4.92 0 002.15-2.71c-.94.56-1.98.97-3.08 1.2a4.91 4.91 0 00-8.38 4.48A13.94 13.94 0 011.67 3.15a4.89 4.89 0 001.52 6.54A4.89 4.89 0 01.96 9v.06a4.91 4.91 0 003.94 4.81c-.42.12-.86.18-1.31.18-.32 0-.63-.03-.93-.08a4.92 4.92 0 004.6 3.42A9.86 9.86 0 010 19.54a13.94 13.94 0 007.55 2.21c9.06 0 14.01-7.5 14.01-14 0-.21 0-.42-.02-.63a10.03 10.03 0 002.46-2.56z" />
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                 </svg>
               </a>
               <a
@@ -339,6 +339,53 @@ export default function ArtikelPage({
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M22.68 0H1.32C.6 0 0 .6 0 1.32v21.36C0 23.4.6 24 1.32 24H12.8v-9.33H9.69v-3.63h3.11V8.41c0-3.07 1.87-4.75 4.6-4.75 1.31 0 2.44.1 2.77.14v3.21h-1.9c-1.49 0-1.78.71-1.78 1.74v2.28h3.56l-.46 3.63h-3.1V24h6.08c.73 0 1.32-.6 1.32-1.32V1.32C24 .6 23.4 0 22.68 0z" />
+                </svg>
+              </a>
+              {/* Telegram */}
+              <a
+                href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(title)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-sky-500 hover:bg-sky-400 text-white p-3 rounded-full transition"
+                title="Bagikan ke Telegram"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                </svg>
+              </a>
+              {/* LinkedIn */}
+              <a
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-blue-800 hover:bg-blue-700 text-white p-3 rounded-full transition"
+                title="Bagikan ke LinkedIn"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+              </a>
+              {/* Copy Link */}
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(shareUrl);
+                  alert('Link berhasil disalin!');
+                }}
+                className="bg-gray-600 hover:bg-gray-500 text-white p-3 rounded-full transition"
+                title="Salin Link"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              </button>
+              {/* Email */}
+              <a
+                href={`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`Baca artikel menarik ini: ${shareUrl}`)}`}
+                className="bg-gray-700 hover:bg-gray-600 text-white p-3 rounded-full transition"
+                title="Bagikan via Email"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </a>
             </div>
