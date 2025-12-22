@@ -159,15 +159,23 @@ export default function Home({
                         />
                       </div>
                       <div className="p-3 md:p-5">
-                        <div className="flex items-center gap-1.5 md:gap-2 mb-2 md:mb-3">
-                          {article.categories.slice(0, 1).map((cat) => (
-                            <span
-                              key={cat}
-                              className="px-2 md:px-3 py-0.5 md:py-1 text-[10px] md:text-xs bg-blue-500/20 text-blue-400 rounded-full border border-blue-500/30 font-medium"
-                            >
-                              {cat}
-                            </span>
-                          ))}
+                        <div className="flex items-center justify-between gap-1.5 md:gap-2 mb-2 md:mb-3">
+                          <div className="flex items-center gap-1.5 md:gap-2">
+                            {article.categories.slice(0, 1).map((cat) => (
+                              <span
+                                key={cat}
+                                className="px-2 md:px-3 py-0.5 md:py-1 text-[10px] md:text-xs bg-blue-500/20 text-blue-400 rounded-full border border-blue-500/30 font-medium"
+                              >
+                                {cat}
+                              </span>
+                            ))}
+                          </div>
+                          <span className="text-[10px] md:text-xs text-[var(--text-muted)] flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            {new Date(article.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          </span>
                         </div>
                         <h3 className="text-sm md:text-lg font-semibold text-[var(--text-primary)] mb-1 md:mb-2 line-clamp-2 group-hover:text-blue-400 transition-colors">
                           {article.title}
@@ -219,15 +227,23 @@ export default function Home({
                         />
                       </div>
                       <div className="p-3 md:p-5">
-                        <div className="flex items-center gap-1.5 md:gap-2 mb-2 md:mb-3 flex-wrap">
-                          {article.categories.slice(0, 1).map((cat) => (
-                            <span
-                              key={cat}
-                              className="px-2 py-0.5 md:py-1 text-[10px] md:text-xs bg-[var(--bg-tertiary)] text-[var(--text-secondary)] rounded-full font-medium"
-                            >
-                              {cat}
-                            </span>
-                          ))}
+                        <div className="flex items-center justify-between gap-1.5 md:gap-2 mb-2 md:mb-3 flex-wrap">
+                          <div className="flex items-center gap-1.5 md:gap-2">
+                            {article.categories.slice(0, 1).map((cat) => (
+                              <span
+                                key={cat}
+                                className="px-2 py-0.5 md:py-1 text-[10px] md:text-xs bg-[var(--bg-tertiary)] text-[var(--text-secondary)] rounded-full font-medium"
+                              >
+                                {cat}
+                              </span>
+                            ))}
+                          </div>
+                          <span className="text-[9px] md:text-xs text-[var(--text-muted)] flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-2.5 w-2.5 md:h-3 md:w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            {new Date(article.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+                          </span>
                         </div>
                         <h3 className="text-sm md:text-base font-semibold text-[var(--text-primary)] mb-1 md:mb-2 line-clamp-2 group-hover:text-blue-400 transition-colors">
                           {article.title}

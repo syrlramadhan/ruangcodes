@@ -82,6 +82,7 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
     .split(',')
     .map((cat: string) => cat.trim());
   const description = document.getAttribute('description') || '';
+  const date = document.getAttribute('date') || '';
 
   // Get related articles (any matching category)
   const relatedArticles = allArticles
@@ -147,6 +148,7 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
       title,
       categories,
       description,
+      date,
       relatedArticles: relatedArticles.map((article) => ({
         ...article,
         thumbnail: article.thumbnail || '/images/default-thumbnail.png',
@@ -162,6 +164,7 @@ export default function ArtikelPage({
   title,
   categories,
   description,
+  date,
   relatedArticles,
   allCategories,
   thumbnail,
@@ -172,6 +175,7 @@ export default function ArtikelPage({
   title: string;
   categories: string[];
   description: string;
+  date: string;
   relatedArticles: { slug: string; title: string; description: string; thumbnail: string; categories: string[] }[];
   allCategories: string[];
   thumbnail: string;
@@ -308,6 +312,21 @@ export default function ArtikelPage({
                 </div>
               </div>
               <h1 className="text-xl md:text-3xl font-bold text-[var(--text-primary)]">{title}</h1>
+              {date && (
+                <div className="flex items-center gap-2 text-[var(--text-tertiary)] text-xs md:text-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <time dateTime={date}>
+                    {new Date(date).toLocaleDateString('id-ID', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </time>
+                </div>
+              )}
               {description && (
                 <p className="text-[var(--text-tertiary)] text-sm md:text-lg">{description}</p>
               )}

@@ -203,22 +203,54 @@ body {
 
 /* Lists */
 .prose ul {
-  @apply list-disc list-inside mb-3 md:mb-4 space-y-1.5 md:space-y-2 text-sm md:text-base;
+  @apply mb-4 md:mb-6 space-y-2 md:space-y-3 text-sm md:text-base;
   color: var(--text-secondary);
+  list-style: none;
+  padding-left: 0;
 }
 
 .prose ol {
-  @apply list-decimal list-inside mb-3 md:mb-4 space-y-1.5 md:space-y-2 text-sm md:text-base;
+  @apply mb-4 md:mb-6 space-y-2 md:space-y-3 text-sm md:text-base;
+  color: var(--text-secondary);
+  list-style: none;
+  padding-left: 0;
+  counter-reset: list-counter;
+}
+
+.prose ul > li {
+  @apply text-sm md:text-base pl-6 relative;
   color: var(--text-secondary);
 }
 
-.prose li {
-  @apply text-sm md:text-base;
-  color: var(--text-secondary);
+.prose ul > li::before {
+  content: '';
+  @apply absolute left-0 top-2 w-2 h-2 rounded-full bg-blue-400;
 }
 
-.prose li::marker {
-  @apply text-blue-400;
+.prose ol > li {
+  @apply text-sm md:text-base pl-8 relative;
+  color: var(--text-secondary);
+  counter-increment: list-counter;
+}
+
+.prose ol > li::before {
+  content: counter(list-counter) '.';
+  @apply absolute left-0 top-0 font-semibold text-blue-400;
+}
+
+/* Nested lists */
+.prose ul ul,
+.prose ol ul {
+  @apply mt-2 mb-0 ml-4;
+}
+
+.prose ul ul > li::before {
+  @apply w-1.5 h-1.5 bg-blue-300;
+}
+
+.prose ol ol,
+.prose ul ol {
+  @apply mt-2 mb-0 ml-4;
 }
 
 /* Blockquote */
